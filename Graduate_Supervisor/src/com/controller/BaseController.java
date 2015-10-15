@@ -43,8 +43,6 @@ public class BaseController extends Controller {
 
 		SysUser user = getLoginUser();
 		
-		System.out.println(user);
-
 		return user.getStr("s_foreign_id");
 
 	}

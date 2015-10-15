@@ -19,10 +19,9 @@ public class StudentBaseController extends BaseController {
 	}
 
 	public void getStudentBaseListBySelected() {
-		QueryResult<InfoStudentBasic> queryResult = null;
 
-		int page = getParaToInt("page").intValue();
-		int rows = getParaToInt("rows").intValue();
+		int page = getParaToInt("page");
+		int rows = getParaToInt("rows");
 
 		String t_work_id = getId();
 
@@ -30,23 +29,28 @@ public class StudentBaseController extends BaseController {
 				|| (t_work_id.equals("0"))) {
 			t_work_id = (String) getSessionAttr("t_work_id");
 		}
-
-		queryResult = InfoStudentBasic.getStudentResultWithSelectedByWorkId(
-				page, rows, t_work_id);
+		QueryResult<InfoStudentBasic> queryResult = InfoStudentBasic
+				.getStudentResultWithSelectedByWorkId(page, rows, t_work_id);
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
 		jsonMap.put("rows", queryResult.getList());
-		jsonMap.put("total", Long.valueOf(queryResult.getCount()));
+		jsonMap.put("total", queryResult.getCount());
 
 		renderJson(jsonMap);
 	}
 
+	public void volunteer_student() {
+		render("volunteer_student.jsp");
+	}
+
 	public void getStudentBaseList() {
+
 		QueryResult<InfoStudentBasic> queryResult = null;
 
-		int page = getParaToInt("page").intValue();
-		int rows = getParaToInt("rows").intValue();
+		int page = getParaToInt("page");
+
+		int rows = getParaToInt("rows");
 
 		String t_work_id = getId();
 
@@ -56,7 +60,8 @@ public class StudentBaseController extends BaseController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
 		jsonMap.put("rows", queryResult.getList());
-		jsonMap.put("total", Long.valueOf(queryResult.getCount()));
+
+		jsonMap.put("total", queryResult.getCount());
 
 		renderJson(jsonMap);
 	}
@@ -64,8 +69,8 @@ public class StudentBaseController extends BaseController {
 	public void getUnselectStudentList() {
 		QueryResult<InfoStudentBasic> queryResult = null;
 
-		int page = getParaToInt("page").intValue();
-		int rows = getParaToInt("rows").intValue();
+		int page = getParaToInt("page");
+		int rows = getParaToInt("rows");
 
 		queryResult = InfoStudentBasic.getNotSelectedStudentResult(page, rows);
 
@@ -75,8 +80,12 @@ public class StudentBaseController extends BaseController {
 
 		jsonMap.put("rows", list);
 
-		jsonMap.put("total", Long.valueOf(queryResult.getCount()));
+		jsonMap.put("total", queryResult.getCount());
 
 		renderJson(jsonMap);
+	}
+
+	public void detail() {
+		render("detail.jsp");
 	}
 }

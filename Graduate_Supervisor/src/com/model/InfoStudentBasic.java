@@ -15,17 +15,17 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 	public static final InfoStudentBasic dao = new InfoStudentBasic();
 
 	public static InfoStudentBasic getStudent(String s_id) {
-		try {
-			return (InfoStudentBasic) dao.findById(s_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+
+		return dao.findById(s_id);
+
 	}
 
 	public static QueryResult<InfoStudentBasic> getStudentResult(Integer page,
 			Integer rows) {
-		String sql = "from i_student";
+
+		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+
+		String sql = "from info_student_basic";
 		try {
 			Page<InfoStudentBasic> pageList = dao.paginate(page.intValue(),
 					rows.intValue(), "Select * ", sql);
@@ -34,16 +34,19 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 			long count = Db.queryLong("select count(1) " + sql).longValue();
 
-			return new QueryResult<InfoStudentBasic>(count, list);
+			queryResult = new QueryResult<InfoStudentBasic>(count, list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return queryResult;
 	}
 
 	public static QueryResult<InfoStudentBasic> getStudentResultWithVolunteerByWorkId(
 			int page, int rows, String t_work_id) {
-		String sql = "from i_student i ,l_student_volunteer l where  l.t_work_id = "
+
+		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+
+		String sql = "from info_student_basic i ,logic_student_volunteer l where  l.t_work_id = "
 				+ t_work_id + " and i.s_id = l.s_id";
 		try {
 			Page<InfoStudentBasic> pageList = dao.paginate(page, rows,
@@ -53,16 +56,20 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 			long count = Db.queryLong("select count(1) " + sql).longValue();
 
-			return new QueryResult<InfoStudentBasic>(count, list);
+			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return queryResult;
 	}
 
 	public static QueryResult<InfoStudentBasic> getStudentResultWithSelectedByWorkId(
 			int page, int rows, String t_work_id) {
-		String sql = "from i_student i ,l_teacher_student l where  l.t_work_id = "
+
+		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+
+		String sql = "from info_student_basic i ,logic_teacher_student l where  l.t_work_id = "
 				+ t_work_id + " and i.s_id = l.s_id";
 
 		System.out.println(sql);
@@ -74,16 +81,20 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 			long count = Db.queryLong("select count(1) " + sql).longValue();
 
-			return new QueryResult<InfoStudentBasic>(count, list);
+			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return queryResult;
 	}
 
 	public static QueryResult<InfoStudentBasic> getNotSelectedStudentResult(
 			int page, int rows) {
-		String sql = " from i_student i where s_id not in (select s_id from l_teacher_student)";
+
+		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+
+		String sql = " from info_student_basic i where s_id not in (select s_id from logic_teacher_student)";
 		try {
 			Page<InfoStudentBasic> pageList = dao.paginate(page, rows,
 					"Select * ", sql);
@@ -92,10 +103,11 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 			long count = Db.queryLong("select count(1) " + sql).longValue();
 
-			return new QueryResult<InfoStudentBasic>(count, list);
+			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return queryResult;
 	}
 }

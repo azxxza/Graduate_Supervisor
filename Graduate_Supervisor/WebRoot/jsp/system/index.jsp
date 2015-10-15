@@ -74,7 +74,7 @@
 		
        }
         
-      function closeTab(title){
+     function closeTab(title){
 		$('#main').tabs('close',title);
 	}
         
@@ -148,7 +148,7 @@
 				<div title="师生互选" data-options="iconCls:'icon-reload'">
 				<ul id="ttt_4">
 					<li data-options="iconCls:'icon-table-refresh',url:'${ctx}/studentBase/candidate_student'"><span>所有学生列表</span></li>
-					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/current_volunteer_candidate_student'"><span>当前志愿可录取学生列表</span></li>
+					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/volunteer_student'"><span>当前志愿可录取学生列表</span></li>
 				</ul>
 				
 				</div>

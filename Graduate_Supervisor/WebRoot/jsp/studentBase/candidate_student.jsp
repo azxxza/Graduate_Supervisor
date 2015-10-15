@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="/privilege" prefix="privilege"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -33,18 +33,18 @@ function initBasicGrid() {
 		pagination : true,
 		emptyMsg : '没有相关记录',
 		striped:true,
-		url : '${pageContext.request.contextPath}/studentBase/getStudentBaseList?Date='
+		url : '${ctx}/studentBase/getStudentBaseList?Date='
 				+ new Date() + '',
 
 		 columns : [ [
-		 {field : 's_t_id',checkbox:true},
-		 {field : 'count',title:'人数',hidden:true},
+		 {field : 's_t_id',checkbox:false},
+		 {field : 'count',title:'人数',hidden:false},
 	 	 {field : 's_id',title : '学号',width : getWidth(0.2),align : 'center'},
 	 	 {field : 's_name',title : '姓名',width : getWidth(0.2),align : 'center'},
 	 	 {field : 's_sex',title : '性别',width : getWidth(0.2),align : 'center'},
 	 	  {field:  'detail',title:'详细信息',width:getWidth(0.15),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue' onclick='detail("+index+")'>智育成绩</a>";  
+				 var detail = "<a href='#' style='color:blue;text-decoration:none' onclick='detail("+index+")'>智育成绩</a>";  
 				 return detail; 
        		 } 
 		 },
@@ -64,6 +64,21 @@ function initBasicGrid() {
 	
 
 }
+
+
+/**
+ * 详细信息
+ */
+function detail(index) {
+	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
+	var row = $('#basicGrid_div').datagrid('getSelected');
+	var s_id = row.s_id;
+	alert(s_id);
+	var menu_href = "${pageContext.request.contextPath}/studentBase/detail?s_id="
+		+ s_id;
+	parent.addTabs("详细信息",menu_href);
+}
+
 
 
 /**
@@ -131,21 +146,23 @@ function teacher_select(rows){
 }
 
 
+
+
 </script>
 </head>
 <body class="easyui-layout">
 
 	<div id="toobar"  style="padding-right: 5%;">
 	
-		<c:if test="${loginUser.p_id == 2}">
+		<privilege:show powerName="menu_teacher">
 	
-			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="false" onclick="select();">选择学生</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="select();">选择学生</a>
 		
-		</c:if>
+		</privilege:show>
 		
 	</div>
 	
-	<c:if test="${loginUser.p_id == 2}">
+	<privilege:show powerName="menu_teacher">
 
 	<div id="basic_div" data-options="region:'center',title:'教师基本信息列表'">
 		
@@ -153,9 +170,9 @@ function teacher_select(rows){
 		
 	</div>
 	
-	</c:if>
+	</privilege:show>
 	
-	<c:if test="${loginUser.p_id == 3}">
+	<privilege:show powerName="menu_admin">
 	
 	<div id="basic_div" data-options="region:'center'">
 		
@@ -163,7 +180,7 @@ function teacher_select(rows){
 		
 	</div>
 	
-	</c:if>
+	</privilege:show>
 
 	<%@include file="../common/shade.jsp" %>
 </body>

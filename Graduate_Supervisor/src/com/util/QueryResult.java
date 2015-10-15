@@ -12,6 +12,10 @@ public class QueryResult<T> {
 		this.list = list;
 	}
 
+	public QueryResult() {
+
+	}
+
 	public long getCount() {
 		return count;
 	}

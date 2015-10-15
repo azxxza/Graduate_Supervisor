@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+/*
+	表单数据的样式(除了教师基本信息)
+*/
+html {
+	height: 100%;
+	width: 100%;
+}
+
+* {
+	font-size: 10px;
+}
+
+input{
+	width:28%;
+}
+
+
+.formtable{
+	margin:2% 3% 3% 3%;
+	border-collapse: collapse; /*合并边框模型*/
+	bordercolor: "#E8E8E8";
+	cellpadding: "0";
+	cellspacing: "0";
+}
+
+.submittable{
+	margin-left: 25%;
+	
+}
+
+
+.tdLabel {
+	width: 12%;
+	height: 40px;
+	background: #f7f8fa;
+	border: solid #E8E8E8 1px;
+	padding-left: 10px;
+	padding-right: 10px;
+	line-height: 25px;
+	
+}
+
+.tdInput {
+	width: 35%;
+	height: 50px;
+	border: solid #E8E8E8 1px;
+	padding-left: 20px;
+}
+
+.tip {
+	color: red;
+	font-size: 20px;
+	font-weight: bold;
+	display: none;
+}

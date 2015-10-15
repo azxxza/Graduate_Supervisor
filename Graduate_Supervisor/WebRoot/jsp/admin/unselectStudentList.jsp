@@ -3,12 +3,9 @@
 <html>
 	<head>
 		<title>基本信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
+		<%@ include file="/jsp/common/meta.jsp"%>
+		<%@ include file="/jsp/common/easyui.jsp"%>
+		<%@ include file="/jsp/common/taglibs.jsp"%>
 		<script language="javascript">
 var para = undefined;
 var array = new Array();
@@ -70,7 +67,7 @@ function initBasicGrid() {
 		striped:true,
 		rownumbers:true,
 		onClickCell: onClickCell,
-		url : '${pageContext.request.contextPath}/studentBase/getUnselectStudentList?Date='
+		url : '${ctx}/studentBase/getUnselectStudentList?Date='
 				+ new Date() + '',
 
 		 columns : [ [
@@ -80,7 +77,7 @@ function initBasicGrid() {
 	 	 {field : 's_sex',title : '性别',width : getWidth(0.17),align : 'center'},
 	 	  {field : 'detail',title : '更多',width : getWidth(0.2),align : 'center',
 	 	  	 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue' onclick='detail("+index+")'>更多</a>";  
+				 var detail = "<a href='#' style='color:blue;text-decoration: none;' onclick='detail("+index+")'>更多</a>";  
 				 return detail; 
        		 } 
 	 	  },
@@ -91,7 +88,7 @@ function initBasicGrid() {
 	 	    editor : {  type : 'combobox',  options : { 
 			  	 id : 'combo', 
 			  	 editable : false,
-			  	 url : '${pageContext.request.contextPath}/teacherBase/getTeacherJson',
+			  	 url : '${ctx}/teacherBase/getTeacherJson',
           		 valueField : "value",/* value是unitJSON对象的属性名 */  
            		 textField : "text",/* name是unitJSON对象的属性名 */ 
            			icons: [{
@@ -179,7 +176,8 @@ function sumbitData(){
 	para = array.join(";");
 	
 	if(array.length == 0){
-		alert("没有可以提交的数据");
+		
+		$.messager.alert('提示信息', '没有可提交的志愿','warning');
 		return;
 	}
 	
@@ -187,14 +185,14 @@ function sumbitData(){
 	var jsonPara = {"para" : para};
 	
 	if(para != undefined){
-		var  saveURL = "${pageContext.request.contextPath}/admin/saveTeacherStudent?date="
+		var  saveURL = "${ctx}/admin/saveTeachuploadWorderStudent?date="
 				+ new Date() + "";
 	
 		jQuery.post(saveURL,jsonPara,function(jsonData) {
 			var flag = jsonData.flag;
 			
 			if(flag == true){
-				alert("提交成功");
+				$.messager.alert('提示信息', '提交成功','info');
 				jQuery("#basicGrid_div").datagrid("reload");
 			
 			}else {
@@ -209,7 +207,7 @@ function sumbitData(){
 		
 		}, "json");
 	}else {
-		alert("没有可提交的志愿");
+		$.messager.alert('提示信息','没有可提交的志愿','info');
 	}
 	
 	

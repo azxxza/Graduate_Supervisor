@@ -1,9 +1,13 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.model.InfoTeacherBasic;
+import com.model.LogicStudentVolunteer;
+import com.util.ItemBean;
 import com.util.MessageBean;
 import com.util.QueryResult;
 
@@ -17,15 +21,6 @@ public class TeacherBaseController extends BaseController {
 
 	public void candidateTeacherList() {
 		render("candidate_teacher.jsp");
-	}
-
-	/**
-	 * 列表页面或编辑页面
-	 */
-	public void list() {
-
-		render("list.jsp");
-
 	}
 
 	/**
@@ -63,18 +58,42 @@ public class TeacherBaseController extends BaseController {
 
 	}
 
-	/**
-	 * 教师基本信息页面，不可编辑
-	 */
-	public void base() {
-		String t_work_id = getPara("t_work_id");
+	public void getVolunteerJson() {
 
-		setAttr("t_work_id", t_work_id);
-		// InfoTeacherBasic tmsTeacher = InfoTeacherBasic
-		// .getTeacherModel(t_work_id);
-		// setAttr("tmsTeacher", tmsTeacher);
-		//
-		// render("base.jsp");
+		List<ItemBean> treeList = new ArrayList<ItemBean>();
+
+		QueryResult<LogicStudentVolunteer> queryResult = LogicStudentVolunteer
+				.getStudentVolunteerResult(getId());
+
+		List<LogicStudentVolunteer> list = null;
+
+		if (queryResult != null) {
+			list = queryResult.getList();
+		}
+
+		List<String> volunteerList = new ArrayList<String>();
+
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				LogicStudentVolunteer logicStudentVolunteer = list.get(i);
+				String s_t_volunteer = logicStudentVolunteer
+						.get("s_t_volunteer");
+
+				volunteerList.add(s_t_volunteer);
+
+			}
+		}
+
+		for (int i = 1; i <= 5; i++) {
+			if (volunteerList.contains(i + "")) {
+				continue;
+			}
+			treeList.add(new ItemBean(i + "", "第 " + i + " 志愿"));
+
+		}
+
+		renderJson(treeList);
+
 	}
 
 	public void doVolunteer() {

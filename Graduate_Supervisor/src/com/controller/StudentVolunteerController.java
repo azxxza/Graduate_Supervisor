@@ -30,7 +30,10 @@ public class StudentVolunteerController extends BaseController {
 	}
 
 	public void saveStudentVolunteer() {
+		
 		String s_id = getId();
+		
+		System.out.println(s_id);
 
 		MessageBean messageBean = new MessageBean();
 

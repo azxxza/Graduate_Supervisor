@@ -61,7 +61,7 @@ public class LogicTeacherStudent extends Model<LogicTeacherStudent> {
 	}
 
 	public static boolean exitLogicTeacherStudentBySId(String s_id) {
-		String sql = "select * from l_teacher_student where s_id = " + s_id;
+		String sql = "select * from logic_teacher_student where s_id = " + s_id;
 
 		List<LogicTeacherStudent> list = dao.find(sql);
 		if (list == null)

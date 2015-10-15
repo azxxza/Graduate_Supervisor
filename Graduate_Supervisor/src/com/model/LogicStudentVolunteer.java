@@ -105,7 +105,7 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static QueryResult<LogicStudentVolunteer> getStudentVolunteerResult(
 			String s_id) {
-		String sql = " from l_student_volunteer where s_id = " + s_id;
+		String sql = " from logic_student_volunteer where s_id = " + s_id;
 
 		List<LogicStudentVolunteer> list = dao.find("select * " + sql);
 

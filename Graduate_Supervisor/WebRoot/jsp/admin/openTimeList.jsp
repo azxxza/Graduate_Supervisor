@@ -3,12 +3,9 @@
 <html>
 	<head>
 		<title>My JSP 'list.jsp' starting page</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
+		<%@ include file="/jsp/common/meta.jsp"%>
+		<%@ include file="/jsp/common/easyui.jsp"%>
+		<%@ include file="/jsp/common/taglibs.jsp"%>
 <script type="text/javascript">
 		
 var para = undefined;
@@ -57,31 +54,40 @@ function initBasicGrid() {
 		striped:true,
 		rownumbers:true,
 		onClickCell: onClickCell,
-		url : '${pageContext.request.contextPath}/admin/getOpenTimeList?Date='
+		url : '${ctx}/admin/getOpenTimeList?Date='
 				+ new Date() + '',
 		 columns : [ [
 		 {field : 'r_t_id',hidden:true},
-	 	 {field : 'r_t_round',title : '第几轮',width : getWidth(0.25),align : 'center',
+	 	 {field : 'r_t_round',title : '第几轮',width : getWidth(0.2),align : 'center',
 	 		 formatter : function(value, row, index) {
 	 			
 	 			return "第 "+value+" 轮";
 		 		
 			 }
 	 	 },
-	 	 {field : 'r_t_start_time',title : '开始时间(点击单元格修改时间)',width : getWidth(0.25),align : 'center',
+	 	 {field : 'r_t_start_time',title : '开始时间(点击单元格修改时间)',width : getWidth(0.2),align : 'center',
 	 	 	editor:{ type:'datetimebox',options:{editable:false}}
 	 	 },
-	 	 {field : 'r_t_end_time',title : '结束时间(点击单元格修改时间)',width : getWidth(0.25),align : 'center',
+	 	 {field : 'r_t_end_time',title : '结束时间(点击单元格修改时间)',width : getWidth(0.2),align : 'center',
 	 		 editor:{ type:'datetimebox',options:{editable:false}}
 	 	 },
 	 	 
-	 	  {field:  'option',title:'操作',width:getWidth(0.13),align:'center',
+	 	  {field:  'volunteer_time',title:'编辑志愿时间',width:getWidth(0.2),align:'center',
 		 	formatter : function(value, row, index) {
-	 			var del = "<a href='#' class='delcls' style='color:blue' onclick='add("
-				+ row.r_t_round + ")'></a>";
+	 			var del = "<a href='#'  style='color:blue;text-decoration: none;' onclick='add("
+				+ row.r_t_round + ")'>志愿时间</a>";
+		 		return del; 
+			 }
+		 },
+		 
+		  {field:  'option',title:'操作',width:getWidth(0.17),align:'center',
+		 	formatter : function(value, row, index) {
+	 			var del = "<a href='#'  style='color:blue;text-decoration: none;' onclick='confirmDel("
+				+index+ ")'>删除</a>";
 		 		return del; 
 			 }
 		 }
+	 	
 	 	
 	 	 
 		] ],
@@ -91,7 +97,6 @@ function initBasicGrid() {
 		},
 		
 		onLoadSuccess : function(data) {
-			$('.delcls').linkbutton({text : '添加志愿时间',plain : true,iconCls : 'icon-add'});
 			$(this).datagrid('doCellTip',{});
 
 		},
@@ -109,6 +114,7 @@ function initBasicGrid() {
 jQuery(function() {
 
 	initBasicGrid();
+	
 	
 });
 
@@ -136,7 +142,7 @@ function submitData() {
 	
 	var jsonPara = {"para" : para};
 	
-	var saveURL = "${pageContext.request.contextPath}/admin/updateOpenTime?date="
+	var saveURL = "${ctx}/admin/updateOpenTime?date="
 				+ new Date() + "";
 	
 	jQuery.post(saveURL,jsonPara,function(jsonData) {
@@ -164,23 +170,48 @@ function undo(){
 
 function add(r_t_round){
 	
-	
 	$('#win').window({
-			content : "<iframe frameborder='0' scrolling='no' style='width:100%;height:100%;' src='${pageContext.request.contextPath}/admin/addVolunteerTimeList?r_t_round="+r_t_round+"'></iframe>",
+			content : "<iframe frameborder='0' scrolling='no' style='width:100%;height:100%;' src='${ctx}/admin/addVolunteerTimeList?r_t_round="+r_t_round+"'></iframe>",
 		});
 	$('#win').window('open');
 	
 }
 
 function addData(){
+	
 	jQuery('#round_add_win').window("open");
+	
+	var top = $("#round_add_win").offset().top - 90;
+	$('#round_add_win').window('open').window('resize',{width:'400px',height:'300px',top: top});
 	
 }
 
 function confirmAdd(){
+
+	var r_t_start_time = $('#r_t_start_time').datetimebox('getValue');
+	
+	var r_t_end_time = $('#r_t_end_time').datetimebox('getValue');
+	
+	if(r_t_start_time == ''){
+		$.messager.alert('提示信息','开始日期不为空','warning');
+		return;
+	}
+	
+	if(r_t_end_time == ''){
+		$.messager.alert('提示信息','截止日期不为空','warning');
+		return;
+	}
+	
+	if(r_t_start_time > r_t_end_time){
+		$.messager.alert('提示信息','开始日期不能大于截止日期','warning');
+		return;
+	}
+	
+	
+	
 	var formData = jQuery("#basic").serializeArray();
 	
-	var  saveURL = "${pageContext.request.contextPath}/admin/addOpenTime?date="
+	var  saveURL = "${ctx}/admin/addOpenTime?date="
 				+ new Date() + "";
 	jQuery.post(saveURL,formData,function(jsonData) {
 		var flag = jsonData.flag;
@@ -207,6 +238,39 @@ function cancelAdd(){
 function reloadData(){
 	jQuery("#basicGrid_div").datagrid("reload");
 }
+
+function confirmDel(index){
+	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
+	var row = $('#basicGrid_div').datagrid('getSelected');
+	var r_t_id = row.r_t_id;
+
+	$.messager.confirm('确认对话框', '您想要删除吗？', function(yes) {
+		if (yes) {
+
+			delOpenTime(r_t_id);
+		}
+	});
+}
+
+function delOpenTime(r_t_id){
+	var delURL = "${ctx}/admin/deleteOpenTime?r_t_id="
+			+ r_t_id + "&date=" + new Date() + "";
+	jQuery.get(delURL, function(jsonData) {
+		var flag = jsonData.flag;
+		
+		if (flag == true) {
+			$.messager.alert('我的消息','删除成功','info');	
+			jQuery('#basicGrid_div').datagrid("reload");
+
+		} else {
+			var message = jsonData.message;
+			$.messager.alert('我的消息',message,'error');
+
+		}
+	}, "json");
+}
+
+
 
 	
 </script>
@@ -240,9 +304,9 @@ function reloadData(){
 		<div id="basicGrid_div"></div>
 	</div>
 	
-	<div id="win" class="easyui-dialog" title="编辑志愿时间" style="width:600px;height:400px; text-align: center;"   
+	<div id="win" class="easyui-dialog" title="编辑志愿时间" style="width:600;height:450; text-align: center;"   
         data-options="iconCls:'icon-tip',resizable:true,modal:true,closed:true,">
-
+		
 	</div>
 	
 	<div id="round_add_win" class="easyui-dialog" title="添加新一轮" style="width:400px;height:300px; text-align: center;"   

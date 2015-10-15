@@ -46,7 +46,7 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 			String t_work_id) {
 		try {
 			List<LogicStudentVolunteer> list = dao
-					.find("select * from l_student_volunteer where t_work_id = "
+					.find("select * from logic_student_volunteer where t_work_id = "
 							+ t_work_id + " and s_id = " + s_id);
 
 			System.out
@@ -63,19 +63,11 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 	}
 
 	public static LogicStudentVolunteer getVolunteerBySId(String s_id) {
-		try {
-			List<LogicStudentVolunteer> list = dao
-					.find("select * from l_student_volunteer where s_id = "
-							+ s_id);
 
-			if ((list != null) && (list.size() > 0)) {
-				return (LogicStudentVolunteer) list.get(0);
-			}
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		String sql = "select * from l_student_volunteer where s_id = " + s_id;
+
+		return dao.findFirst(sql);
+
 	}
 
 	public static QueryResult<LogicStudentVolunteer> getVolunteerResultByWorkId(
@@ -105,11 +97,12 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static QueryResult<LogicStudentVolunteer> getStudentVolunteerResult(
 			String s_id) {
+
 		String sql = " from logic_student_volunteer where s_id = " + s_id;
 
 		List<LogicStudentVolunteer> list = dao.find("select * " + sql);
 
-		long count = 0L;
+		long count = 0;
 		if (list != null) {
 			count = list.size();
 		}
@@ -117,21 +110,12 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 		return new QueryResult<LogicStudentVolunteer>(count, list);
 	}
 
-	public static boolean updateVolunteer(
-			LogicStudentVolunteer logicStudentVolunteer) {
-		if (logicStudentVolunteer != null) {
-			return logicStudentVolunteer.update();
-		}
-		return false;
-	}
-
 	public static boolean exitVolunteer(String s_id, String s_t_volunteer) {
 		String sql = "select count(1) from l_student_volunteer where s_id = "
 				+ s_id + " and s_t_volunteer = '" + s_t_volunteer + "'";
-		System.out.println(sql);
 		Long count = Db.queryLong(sql);
 
-		if (count.longValue() > 0L) {
+		if (count.longValue() > 0) {
 			return true;
 		}
 		return false;
@@ -142,9 +126,8 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 		String sql = "select * from l_student_volunteer where t_work_id = "
 				+ t_work_id;
 
-		List<LogicStudentVolunteer> list = dao.find(sql);
+		return dao.find(sql);
 
-		return list;
 	}
 
 	public static boolean deleteNotSelectedByWorkId(String t_work_id) {
@@ -161,16 +144,16 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 		return true;
 	}
 
-	public static List<LogicStudentVolunteer> getLogicStudentVolunteerListById(
+	public static List<LogicStudentVolunteer> getLogicStudentVolunteerListBySId(
 			String s_id) {
-		String sql = "select *  from l_student_volunteer where s_id = " + s_id;
+		String sql = "select * from l_student_volunteer where s_id = " + s_id;
 
 		return dao.find(sql);
 	}
 
-	public static boolean deleteLogicStudentVolunteerBySId(String s_id) {
+	public static boolean deleteVolunteerBySId(String s_id) {
 		boolean flag = true;
-		List<LogicStudentVolunteer> list = getLogicStudentVolunteerListById(s_id);
+		List<LogicStudentVolunteer> list = getLogicStudentVolunteerListBySId(s_id);
 		if ((list != null) && (list.size() > 0)) {
 			for (int i = 0; i < list.size(); i++) {
 				flag = ((LogicStudentVolunteer) list.get(i)).delete();

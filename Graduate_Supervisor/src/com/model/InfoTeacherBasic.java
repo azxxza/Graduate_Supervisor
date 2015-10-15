@@ -52,9 +52,9 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 			int rows, String s_id) {
 		String sql = "from info_teacher_basic";
 		try {
-			List<InfoTeacherBasic> list;
+			List<InfoTeacherBasic> list = null;
 
-			if ((page == 0) && (rows == 0)) {
+			if (page == 0 && rows == 0) {
 				list = dao.find("select * " + sql);
 			} else {
 				Page<InfoTeacherBasic> pageList = dao.paginate(page, rows,
@@ -107,7 +107,7 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 	}
 
 	public static Long getTeacherStudentNumberByWorkId(String t_work_id) {
-		String sql = "select count(1) from l_teacher_student where t_work_id =  "
+		String sql = "select count(1) from logic_teacher_student where t_work_id =  "
 				+ t_work_id;
 
 		return Db.queryLong(sql);

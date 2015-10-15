@@ -1,28 +1,13 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>基本信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
-		<script language="javascript">
-
-function getJson(){
-
-	var unitJSON = new Array();
-	for(var i = 1; i <= 5; i++){
-		var a = { "text" : "第 "+ i +" 志愿",  
-            "value" : i };
-            
-         unitJSON.push(a)
-	}
-	
-	return unitJSON;
-}
+<head>
+<title>基本信息列表</title>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
+<%@ include file="/jsp/common/easyui.jsp"%>
+<script language="javascript">
 
 var para = undefined;
 
@@ -64,7 +49,6 @@ function onClickCell(index, field){
 	
 }
 	
-	
 /*
  * 表格初始化
  */
@@ -80,7 +64,7 @@ function initBasicGrid() {
 		emptyMsg : '没有相关记录',
 		striped:true,
 		onClickCell: onClickCell,
-		url : '${pageContext.request.contextPath}/teacherBase/getTeacherBaseList?Date='
+		url : '${ctx}/teacherBase/getTeacherBaseList?Date='
 				+ new Date() + '',
 		 columns : [ [
 		 {field : 't_work_id',hidden:true},
@@ -122,7 +106,7 @@ function initBasicGrid() {
 			  	 id : 'combo', 
 			  	 editable : false,
 // 			  	 data:getJson(),
-			  	 url : '${pageContext.request.contextPath}/teacherBase/getVolunteerJson',
+			  	 url : '${ctx}/teacherBase/getVolunteerJson',
           		 valueField : "value",/* value是unitJSON对象的属性名 */  
            		 textField : "text",/* name是unitJSON对象的属性名 */  
            		 }
@@ -405,8 +389,8 @@ function undo(){
 
 	<div id="toobar"  style="padding-right: 5%;">
 		
-		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="false" onclick="save();">提交志愿</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="false" onclick="undo();">撤销</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="save();">提交志愿</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="undo();">撤销</a>
 		
 	</div>
 	

@@ -30,10 +30,8 @@ public class StudentVolunteerController extends BaseController {
 	}
 
 	public void saveStudentVolunteer() {
-		
+
 		String s_id = getId();
-		
-		System.out.println(s_id);
 
 		MessageBean messageBean = new MessageBean();
 
@@ -131,8 +129,7 @@ public class StudentVolunteerController extends BaseController {
 						.getVolunteerByWorkIdAndSId(s_id, getId());
 
 				if (logicStudentVolunteer != null) {
-					LogicStudentVolunteer
-							.deleteLogicStudentVolunteerBySId(s_id);
+					LogicStudentVolunteer.deleteVolunteerBySId(s_id);
 				}
 
 				long count = InfoTeacherBasic

@@ -42,8 +42,10 @@ public class BaseController extends Controller {
 	protected String getId() {
 
 		SysUser user = getLoginUser();
+		
+		System.out.println(user);
 
-		return user.getStr("foreign_id");
+		return user.getStr("s_foreign_id");
 
 	}
 }

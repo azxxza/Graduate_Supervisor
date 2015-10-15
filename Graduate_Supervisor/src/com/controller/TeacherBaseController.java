@@ -32,7 +32,7 @@ public class TeacherBaseController extends BaseController {
 		int rows = getParaToInt("rows");
 
 		QueryResult<InfoTeacherBasic> queryResult = InfoTeacherBasic
-				.getTeacherBaseResult(page, rows, "");
+				.getTeacherBaseResult(page, rows, getId());
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 

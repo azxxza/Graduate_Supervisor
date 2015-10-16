@@ -139,10 +139,7 @@ function teacher_select(rows){
 			window.alert("操作失败");
 		}
 	}, "json");
-
-			
-			
-		
+	
 }
 
 

@@ -1,18 +1,12 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>My JSP 'list.jsp' starting page</title>
-		<meta http-equiv="pragma" content="no-cache">
-		<meta http-equiv="cache-control" content="no-cache">
-		<meta http-equiv="expires" content="0">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/form.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
+<head>
+<title>My JSP 'list.jsp' starting page</title>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" href="${ctx}/css/form.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <script type="text/javascript">
 	/*
  * 提交
@@ -20,7 +14,7 @@
 function submitData() {
 	var formData = jQuery("#basic").serializeArray();
 	
-	var saveURL = "${pageContext.request.contextPath}/admin/saveOpenTime?date="
+	var saveURL = "${ctx}/admin/saveOpenTime?date="
 				+ new Date() + "";
 	
 	jQuery.post(saveURL,formData,function(jsonData) {

@@ -45,11 +45,7 @@ function initBasicGrid() {
 				 return detail;  
        		 } 
 		 },
-			
 		
-		 
-		 
-
 		] ],
 
 		onLoadSuccess : function(data) {

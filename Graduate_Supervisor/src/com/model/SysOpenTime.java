@@ -20,13 +20,13 @@ public class SysOpenTime extends Model<SysOpenTime> {
 	}
 
 	public static List<SysOpenTime> getOpenTimeList() {
-		String sql = "select * from s_round_open_time";
+		String sql = "select * from sys_round_open_time";
 
 		return dao.find(sql);
 	}
 
 	public static Integer getMaxRound() {
-		String sql = "select max(r_t_round) from s_round_open_time";
+		String sql = "select max(r_t_round) from sys_round_open_time";
 
 		Integer max = Db.queryInt(sql);
 

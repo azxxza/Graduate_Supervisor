@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 
 import com.common.XlsMain;
 import com.jfinal.core.JFinal;
+import com.jfinal.upload.UploadFile;
 import com.model.InfoTeacherBasic;
 import com.model.LogicTeacherStudent;
 import com.model.SysOpenTime;
@@ -18,6 +19,7 @@ import com.util.QueryResult;
 
 public class AdminController extends BaseController {
 	public void openTime() {
+
 		SysOpenTime sysTime = SysOpenTime.getSysTime(1);
 
 		setSessionAttr("sysTime", sysTime);
@@ -43,21 +45,19 @@ public class AdminController extends BaseController {
 
 		String para = getPara("para");
 
-		if ((para != null) && (!para.equals(""))) {
+		if (para != null && !para.equals("")) {
 			String[] pairArray = para.split(";");
 
 			for (int i = 0; i < pairArray.length; i++) {
 				String pair = pairArray[i];
 				String[] elementArray = pair.split(",");
-				String v_t_id = elementArray[0];
+				String id = elementArray[0];
 				String v_t_start_time = elementArray[1];
 				String v_t_end_time = elementArray[2];
 
-				if ((v_t_end_time != null) && (v_t_start_time != null)) {
-					VolunteerTime volunteerTime = (VolunteerTime) VolunteerTime.dao
-							.findById(Integer.valueOf(Integer.parseInt(v_t_id)));
-
-					System.out.println(v_t_end_time + "\t" + v_t_start_time);
+				if (v_t_end_time != null && v_t_start_time != null) {
+					VolunteerTime volunteerTime = VolunteerTime.dao
+							.findById(Integer.parseInt(id));
 
 					volunteerTime.set("v_t_start_time", v_t_start_time);
 					volunteerTime.set("v_t_end_time", v_t_end_time);
@@ -174,7 +174,7 @@ public class AdminController extends BaseController {
 	}
 
 	public void importTeacher() {
-		render("teacherBaseList.jsp");
+		render("importTeacher.jsp");
 	}
 
 	public void saveTeacherStudent() {
@@ -281,7 +281,7 @@ public class AdminController extends BaseController {
 		setSessionAttr("r_t_round", r_t_round);
 
 		List<VolunteerTime> volunteerTimeList = VolunteerTime.dao
-				.find("select * from s_volunteer_open_time where r_t_round = "
+				.find("select * from sys_volunteer_open_time where r_t_round = "
 						+ r_t_round);
 
 		setSessionAttr("volunteerTimeList", volunteerTimeList);
@@ -290,14 +290,11 @@ public class AdminController extends BaseController {
 	}
 
 	public void getVolunteerTimeList() {
-		String r_t_round = (String) getSessionAttr("r_t_round");
+
+		String r_t_round = getSessionAttr("r_t_round");
 
 		List<VolunteerTime> list = VolunteerTime.dao
-				.find("select * from s_volunteer_open_time where r_t_round = "
-						+ r_t_round);
-
-		System.out
-				.println("select * from s_volunteer_open_time where r_t_round = "
+				.find("select * from sys_volunteer_open_time where r_t_round = "
 						+ r_t_round);
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -305,5 +302,46 @@ public class AdminController extends BaseController {
 		jsonMap.put("rows", list);
 
 		renderJson(jsonMap);
+	}
+
+	public void uploadPDF() {
+
+		String t_work_id = getSessionAttr("t_work_id");
+
+		t_work_id = getPara("t_work_id");
+
+		System.out.println(t_work_id);
+
+		MessageBean messageBean = new MessageBean();
+
+		ServletContext context = JFinal.me().getServletContext();
+
+		String realpath = context.getRealPath("/word/");
+
+		try {
+
+			UploadFile uploadFile = getFile("word", realpath,
+					200 * 1024 * 1024, "UTF-8");
+
+			InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
+					.getTmsTeacher(t_work_id);
+
+			infoTeacherBasic.set("t_file_path", uploadFile.getFileName());
+
+			infoTeacherBasic.update();
+
+			messageBean.setFlag(true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			messageBean.setFlag(false);
+			messageBean.setMessage("PDF文档上传失败");
+		}
+
+		render("importTeacher.jsp");
+	}
+
+	public void deleteTeacher() {
+
 	}
 }

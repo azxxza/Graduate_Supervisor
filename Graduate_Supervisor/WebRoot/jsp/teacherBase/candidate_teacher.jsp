@@ -15,7 +15,6 @@ var array = new Array();
 
 var before = undefined;
  
-
 var editIndex = undefined;
 function endEditing(){
 	if (editIndex == undefined){return true}
@@ -28,23 +27,35 @@ function endEditing(){
 	}
 }
 function onClickCell(index, field){
+
+	
 	
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var rest_number = row.rest_number;
 	var s_t_volunteer = row.s_t_volunteer;
-	if(rest_number == 0 && (s_t_volunteer == undefined || s_t_volunteer == '' || s_t_volunteer == 6)){
+	if(rest_number == 0 && (s_t_volunteer == undefined || s_t_volunteer == '')){
 		return;
 	}else {
-	if(s_t_volunteer == undefined || s_t_volunteer == '' || s_t_volunteer == 6){
+		if(s_t_volunteer == undefined || s_t_volunteer == ''){
+			if (endEditing()){
+				$('#basicGrid_div').datagrid('selectRow', index)
+						.datagrid('editCell', {index:index,field:field});
+				editIndex = index;
+				return;
+			}
+		}
+	
+	
+	}
+	
+	if(field == 's_t_volunteer'){
 		if (endEditing()){
-		$('#basicGrid_div').datagrid('selectRow', index)
-				.datagrid('editCell', {index:index,field:field});
-		editIndex = index;
-	}
-	}
-	
-	
+			$('#basicGrid_div').datagrid('selectRow', index)
+						.datagrid('editCell', {index:index,field:field});
+				editIndex = index;
+			return;
+		}
 	}
 	
 }
@@ -52,7 +63,8 @@ function onClickCell(index, field){
 /*
  * 表格初始化
  */
-function initBasicGrid() {
+function initBasicGrid(isOpen) {
+	
 	jQuery('#basicGrid_div').datagrid({
 		view : myview,
 		fit : true,
@@ -95,7 +107,7 @@ function initBasicGrid() {
 		 {field : 't_number',title : '名额(个)',width : getWidth(0.08),align : 'center'},
 		 {field:  'detail',title:'详细信息',width:getWidth(0.08),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue;text-decoration:none'  onclick='detail("+index+")'>更多</a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none'  onclick='detail("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
@@ -105,8 +117,7 @@ function initBasicGrid() {
 			  editor : {  type : 'combobox',  options : { 
 			  	 id : 'combo', 
 			  	 editable : false,
-// 			  	 data:getJson(),
-			  	 url : '${ctx}/teacherBase/getVolunteerJson',
+			  	 url : '${ctx}/studentVolunteer/getVolunteerJson',
           		 valueField : "value",/* value是unitJSON对象的属性名 */  
            		 textField : "text",/* name是unitJSON对象的属性名 */  
            		 }
@@ -114,6 +125,11 @@ function initBasicGrid() {
          	  
          	   formatter: function(value,row,index){
          	   		var del = "<a href='#' class='addcls' style='color:blue'></a>";	
+         	   		
+         	   		if(isOpen == false){
+         	   			return '';
+         	   		}
+         	   		
 					if(value != undefined && value != '' && row.rest_number > 0){
 			 			return '第 ' + value +  ' 志愿';
 			 		}else if(row.rest_number <= 0){
@@ -136,7 +152,7 @@ function initBasicGrid() {
 		 
 		 {field:  'option',title:'操作',width:getWidth(0.08),align:'center',
 		 	formatter : function(value, row, index) {
-		 		if(row.s_t_volunteer != '' && row.s_t_volunteer != undefined && row.s_t_status != '已通过' && row.s_t_volunteer != 6){
+		 		if(row.s_t_volunteer != '' && row.s_t_volunteer != undefined){
 		 			var add = "<a href='#' class='delcls'  onclick='comfirmDel("
 					+ index + ")' style='color:blue'></a>";
 			 		return add; 
@@ -147,33 +163,13 @@ function initBasicGrid() {
 			 }
 		 },
 		 
-		  {field : 's_t_status',title : '状态',width : getWidth(0.08),align : 'center',
-		 	styler: function(value,row,index){
-		 		if(value == "待定"){
-		 			return 'color:red;';
-		 		}
-		 		
-		 		
-					
-			},
-			
-			formatter : function(value, row, index) {
-		 		if(row.s_t_volunteer != '' && row.s_t_volunteer != undefined){
-		 			return '待定';
-		 		}else {
-		 			return '';
-		 		}
-			 },
+		 {field : 's_t_status',title : '状态',width : getWidth(0.08),align : 'center',
 			 
 			  styler: function(value,row,index){
 		 		
-		 			return 'color:green;';
-		 		
+		 		 return 'color:green;';
 					
-			},
-			 
-			 
-			
+			  }
 			
 		 },
 		 
@@ -182,6 +178,7 @@ function initBasicGrid() {
 		] ],
 
 		onLoadSuccess : function(data) {
+			$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
 			$('.delcls').linkbutton({text : '删除志愿',plain : true,iconCls : 'icon-trash'});
 			$('.addcls').linkbutton({text : '添加志愿',plain : true,iconCls : 'icon-add'});
 			$(this).datagrid('doCellTip',{});
@@ -222,7 +219,6 @@ function initBasicGrid() {
 		 	}
 		 	}
 		 	
-// 		 	$('.delcls').linkbutton({text : '删除志愿',plain : true,iconCls : 'icon-trash'});
 		 	
 	    }
 		
@@ -260,7 +256,9 @@ function initWin(){
  */
 jQuery(function() {
 
-	initBasicGrid();
+	var isOpen = ${isOpen};
+
+	initBasicGrid(isOpen);
 	
 	initWin();
 	
@@ -274,7 +272,7 @@ function detail(index) {
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var t_work_id = row.t_work_id;
-	var menu_href = "${pageContext.request.contextPath}/teacherBase/detail?t_work_id="
+	var menu_href = "${ctx}/teacherBase/detail?t_work_id="
 		+ t_work_id;
 	parent.addTabs("详细信息",menu_href);
 }
@@ -302,12 +300,13 @@ function save(){
 	}
 	
 	if(count < 1){
-		alert("没有选择志愿");
+		$.messager.alert('提示信息','没有选择志愿','warning');
+		jQuery("#basicGrid_div").datagrid("reload");
 		return;
 	}
 	
 	if(count > 5){
-		alert("一人只能选择5个志愿");
+		$.messager.alert('提示信息','一人只能选择5个志愿','warning');
 		jQuery("#basicGrid_div").datagrid("reload");
 		return;
 	}
@@ -323,13 +322,16 @@ function save(){
 			var flag = jsonData.flag;
 			
 			if(flag == true){
-				alert("恭喜您，提交成功");
-				jQuery("#basicGrid_div").datagrid("reload");
+				$.messager.alert('提示信息','恭喜您，提交成功','info',function(){
+					jQuery("#basicGrid_div").datagrid("reload");
+				});
+				
 			
 			}else {
 				var message = jsonData.message;
-				alert("提交失败"+message);
-				jQuery("#basicGrid_div").datagrid("reload");
+				$.messager.alert('提示信息','提交失败,原因为：'+message,'error',function(){
+					jQuery("#basicGrid_div").datagrid("reload");
+				});
 				
 			}
 			
@@ -386,14 +388,12 @@ function undo(){
 </script>
 </head>
 <body class="easyui-layout">
-
+<c:if test="${isOpen == true}">
 	<div id="toobar"  style="padding-right: 5%;">
-		
 		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="save();">提交志愿</a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="undo();">撤销</a>
-		
 	</div>
-	
+</c:if>	
 	<div id="basic_div" data-options="region:'center',title:'教师基本信息列表'">
 		<div id="basicGrid_div"></div>
 	</div>

@@ -1,13 +1,12 @@
 package com.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.model.InfoTeacherBasic;
-import com.model.LogicStudentVolunteer;
-import com.util.ItemBean;
+import com.model.LogicTeacherStudent;
+import com.service.TeacherBasicService;
+import com.system.CurrentExcuteVolunteer;
 import com.util.MessageBean;
 import com.util.QueryResult;
 
@@ -19,8 +18,28 @@ import com.util.QueryResult;
  */
 public class TeacherBaseController extends BaseController {
 
+	private TeacherBasicService teacherBasicService = new TeacherBasicService();
+
 	public void candidateTeacherList() {
-		render("candidate_teacher.jsp");
+		String s_id = getId();
+
+		boolean flag = LogicTeacherStudent.exitLogicTeacherStudentBySId(s_id);
+
+		// 返回我的导师列表
+		if (flag) {
+			render("myTeacher.jsp");
+			// 返回志愿列表
+		} else {
+			CurrentExcuteVolunteer currentExcuteVolunteer = CurrentExcuteVolunteer
+					.getCurrentExcuteVolunteer();
+
+			boolean isOpen = currentExcuteVolunteer.isRunning();
+
+			setAttr("isOpen", true);
+
+			render("candidate_teacher.jsp");
+
+		}
 	}
 
 	/**
@@ -58,51 +77,12 @@ public class TeacherBaseController extends BaseController {
 
 	}
 
-	public void getVolunteerJson() {
-
-		List<ItemBean> treeList = new ArrayList<ItemBean>();
-
-		QueryResult<LogicStudentVolunteer> queryResult = LogicStudentVolunteer
-				.getStudentVolunteerResult(getId());
-
-		List<LogicStudentVolunteer> list = null;
-
-		if (queryResult != null) {
-			list = queryResult.getList();
-		}
-
-		List<String> volunteerList = new ArrayList<String>();
-
-		if (list != null) {
-			for (int i = 0; i < list.size(); i++) {
-				LogicStudentVolunteer logicStudentVolunteer = list.get(i);
-				String s_t_volunteer = logicStudentVolunteer
-						.get("s_t_volunteer");
-
-				volunteerList.add(s_t_volunteer);
-
-			}
-		}
-
-		for (int i = 1; i <= 5; i++) {
-			if (volunteerList.contains(i + "")) {
-				continue;
-			}
-			treeList.add(new ItemBean(i + "", "第 " + i + " 志愿"));
-
-		}
-
-		renderJson(treeList);
-
-	}
-
 	public void doVolunteer() {
+
 		String para = getPara("para");
 
 		if (para != null && !para.equals("")) {
 			String[] pairArray = para.split(";");
-
-			System.out.println(pairArray.length);
 
 			for (int i = 0; i < pairArray.length; i++) {
 				String pair = pairArray[i];
@@ -121,5 +101,48 @@ public class TeacherBaseController extends BaseController {
 
 		renderNull();
 
+	}
+
+	public void saveTeacherNumber() {
+
+		MessageBean messageBean = new MessageBean();
+
+		int sucessCount = 0;
+
+		String para = getPara("para");
+
+		if (para != null && !para.equals("")) {
+
+			String[] pairArray = para.split(";");
+
+			for (int i = 0; i < pairArray.length; i++) {
+				String pair = pairArray[i];
+				String[] elementArray = pair.split(",");
+				String t_work_id = elementArray[0];
+				String t_number = elementArray[1];
+
+				boolean flag = teacherBasicService.saveTeacherNumber(t_work_id,
+						Integer.parseInt(t_number));
+
+				if (flag) {
+					sucessCount++;
+				}
+
+			}
+
+			int failCount = pairArray.length - sucessCount;
+
+			messageBean.setFlag(true);
+			String message = "成功保存:&nbsp;" + sucessCount + "&nbsp条数据";
+			if (failCount != 0) {
+				message += ",失败:" + failCount + "条";
+			}
+			messageBean.setMessage(message);
+
+		} else {
+			messageBean.setFlag(false);
+			messageBean.setMessage("参数为空");
+		}
+		renderJson(messageBean);
 	}
 }

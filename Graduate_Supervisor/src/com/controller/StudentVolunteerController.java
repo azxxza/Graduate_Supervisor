@@ -1,15 +1,21 @@
 package com.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.model.InfoTeacherBasic;
 import com.model.LogicStudentVolunteer;
 import com.model.LogicTeacherStudent;
+import com.service.VolunteerService;
+import com.util.ItemBean;
 import com.util.MessageBean;
 import com.util.QueryResult;
 
 public class StudentVolunteerController extends BaseController {
+
+	private VolunteerService volunteerService = new VolunteerService();
+
 	public void getStudentVolunteerList() {
 		QueryResult<LogicStudentVolunteer> queryResult = null;
 
@@ -145,5 +151,13 @@ public class StudentVolunteerController extends BaseController {
 		}
 
 		renderJson(messageBean);
+	}
+
+	public void getVolunteerJson() {
+
+		List<ItemBean> treeList = volunteerService.getVolunteerJson(getId());
+
+		renderJson(treeList);
+
 	}
 }

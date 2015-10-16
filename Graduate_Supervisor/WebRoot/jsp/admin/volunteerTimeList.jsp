@@ -1,20 +1,14 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>My JSP 'list.jsp' starting page</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
+<head>
+<title>志愿时间</title>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
+<%@ include file="/jsp/common/easyui.jsp"%>
 <script type="text/javascript">
 		
-var para = undefined;
-
-var array = new Array(); 
-
 var editIndex = undefined;
 function endEditing(){
 	if (editIndex == undefined){return true}
@@ -60,7 +54,7 @@ function initBasicGrid() {
 		url : '${pageContext.request.contextPath}/admin/getVolunteerTimeList?Date='
 				+ new Date() + '',
 		 columns : [ [
-		 {field : 'v_t_id',hidden:true},
+		 {field : 'id',hidden:true},
 	 	 {field : 'v_volunteer',title : '第几志愿',width : getWidth(0.2),align : 'center',
 	 		 formatter : function(value, row, index) {
 	 			
@@ -107,17 +101,23 @@ jQuery(function() {
 function submitData() {
 
 	saveData();
-	
+
+	var para = undefined;
+
+	var array = new Array(); 
+
 	var data = jQuery("#basicGrid_div").datagrid("getData");
 	
 	var rows = data.rows;
 	
 	for(var i = 0;i<rows.length;i++){
-		var v_t_id =  rows[i].v_t_id;
+		var id =  rows[i].id;
 		var v_t_start_time = rows[i].v_t_start_time;
 		var v_t_end_time = rows[i].v_t_end_time;
-		var par =  v_t_id + "," + v_t_start_time + "," + v_t_end_time;
-		array.push(par);
+		if (v_t_start_time != undefined && v_t_end_time != undefined){
+			var par =  id + "," + v_t_start_time + "," + v_t_end_time;
+			array.push(par);
+		}
 		
 	}
 	
@@ -125,7 +125,7 @@ function submitData() {
 	
 	var jsonPara = {"para" : para};
 	
-	var saveURL = "${pageContext.request.contextPath}/admin/updateVolunteersTime?date="
+	var saveURL = "${ctx}/admin/updateVolunteersTime?date="
 				+ new Date() + "";
 	
 	jQuery.post(saveURL,jsonPara,function(jsonData) {

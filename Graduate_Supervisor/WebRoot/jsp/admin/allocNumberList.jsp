@@ -1,16 +1,13 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>基本信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
-		<script language="javascript">
-		
+<head>
+<title>基本信息列表</title>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
+<%@ include file="/jsp/common/easyui.jsp"%>
+<script language="javascript">
 var para = undefined;
 
 var array = new Array();   
@@ -73,7 +70,7 @@ function initBasicGrid() {
 		 {field : 't_email',title : 'Email',width : getWidth(0.1),align : 'center'},
 		 {field:  'detail',title:'详细信息',width:getWidth(0.1),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue' onclick='detail("+index+")'>更多</a>";  
+				 var detail = "<a href='#' style='color:blue;text-decoration:none' onclick='detail("+index+")'>更多</a>";  
 				 return detail; 
        		 } 
 		 },
@@ -140,7 +137,6 @@ function submitData(){
 	
 	para = array.join(";");
 	
-	alert(para);
 	var jsonPara = {"para" : para};
 	
 	if(para != undefined){
@@ -149,15 +145,21 @@ function submitData(){
 	
 		jQuery.post(saveURL,jsonPara,function(jsonData) {
 			var flag = jsonData.flag;
-			
+			var message = jsonData.message;
 			if(flag == true){
-				alert("恭喜您，提交成功");
-				jQuery("#basicGrid_div").datagrid("reload");
+				$.messager.alert('提示信息', message,'info',function(){
+					
+					jQuery("#basicGrid_div").datagrid("reload");
+					
+				});
+				
 			
 			}else {
-				var message = jsonData.message;
-				alert("提交失败"+message);
-				jQuery("#basicGrid_div").datagrid("reload");
+				
+				$.messager.alert('提示信息', '提交失败','error',function(){
+					jQuery("#basicGrid_div").datagrid("reload");
+				});
+				
 				
 			}
 			
@@ -167,7 +169,8 @@ function submitData(){
 		
 		}, "json");
 	}else {
-		alert("没有可提交的志愿");
+		$.messager.alert('提示信息', '没有可提交的志愿','warning');
+		
 	}
 	
 	

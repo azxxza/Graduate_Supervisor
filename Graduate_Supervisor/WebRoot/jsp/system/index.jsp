@@ -155,7 +155,7 @@
 
 <body class="easyui-layout">
 
-<div region="north" style="height:70px; background-image: url('${ctx}/images/light.png');" class="easyui-layout" >
+<div region="north" style="height:70px;" class="easyui-layout" >
     <div region="west" id="logo" style="width: 600px; padding-left: 30px;background-color: #6ac5f4" border="false"><img src="${ctx}/images/loginlogo.png" style="height: 60px;"></div>
     <div region="center" class="easyui-layout" border="false" style="background-color: #6ac5f4"></div>
     <div region="east" style="width: 180px;background-color: #6ac5f4" border="false">

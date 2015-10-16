@@ -18,9 +18,9 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 		if ((s_id != null) && (!s_id.equals(""))) {
 			LogicStudentVolunteer volunteer = LogicStudentVolunteer
 					.getVolunteerByWorkIdAndSId(s_id,
-							(String) teacherBasic.get("t_work_id"));
+							teacherBasic.getStr("t_work_id"));
 			if (volunteer != null) {
-				String s_t_volunteer = (String) volunteer.get("s_t_volunteer");
+				String s_t_volunteer = volunteer.getStr("s_t_volunteer");
 
 				teacherBasic.put("s_t_volunteer", s_t_volunteer);
 			} else {
@@ -33,19 +33,20 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 
 	private static void setTotalNumber(InfoTeacherBasic teacherBasic,
 			String s_id) {
-		String t_work_id = (String) teacherBasic.get("t_work_id");
+		String t_work_id = teacherBasic.getStr("t_work_id");
 
 		Long rest_number = getTeacherStudentRestNumberByWorkId(t_work_id);
 
 		teacherBasic.put("rest_number", rest_number);
 
-		LogicTeacherStudent logicTeacherStudent = LogicTeacherStudent
-				.getLogicTeacherStudent(t_work_id, s_id);
+		LogicStudentVolunteer volunteer = LogicStudentVolunteer
+				.getVolunteerByWorkIdAndSId(s_id, t_work_id);
 
-		if (logicTeacherStudent != null) {
-			teacherBasic.put("s_t_status", "已通过");
-		} else
+		if (volunteer != null) {
+			teacherBasic.put("s_t_status", "待定");
+		} else {
 			teacherBasic.put("s_t_status", "");
+		}
 	}
 
 	public static QueryResult<InfoTeacherBasic> getTeacherBaseResult(int page,
@@ -63,7 +64,7 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 				list = pageList.getList();
 			}
 
-			if ((s_id != null) && (!s_id.equals(""))) {
+			if (s_id != null && !s_id.equals("")) {
 				for (int i = 0; i < list.size(); i++) {
 					setVolunteer(list.get(i), s_id);
 					setTotalNumber(list.get(i), s_id);

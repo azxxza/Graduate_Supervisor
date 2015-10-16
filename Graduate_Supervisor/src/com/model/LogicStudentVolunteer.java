@@ -95,7 +95,7 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 		return null;
 	}
 
-	public static QueryResult<LogicStudentVolunteer> getStudentVolunteerResult(
+	public static QueryResult<LogicStudentVolunteer> getVolunteerResultBySId(
 			String s_id) {
 
 		String sql = " from logic_student_volunteer where s_id = " + s_id;

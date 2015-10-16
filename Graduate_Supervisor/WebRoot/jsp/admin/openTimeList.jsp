@@ -1,11 +1,17 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>My JSP 'list.jsp' starting page</title>
-		<%@ include file="/jsp/common/meta.jsp"%>
-		<%@ include file="/jsp/common/easyui.jsp"%>
-		<%@ include file="/jsp/common/taglibs.jsp"%>
+<head>
+<title>My JSP 'list.jsp' starting page</title>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/easyui.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script type="text/javascript">
 		
 var para = undefined;
@@ -74,7 +80,7 @@ function initBasicGrid() {
 	 	 
 	 	  {field:  'volunteer_time',title:'编辑志愿时间',width:getWidth(0.2),align:'center',
 		 	formatter : function(value, row, index) {
-	 			var del = "<a href='#'  style='color:blue;text-decoration: none;' onclick='add("
+	 			var del = "<a href='#' class='timecls' style='color:blue;text-decoration: none;' onclick='add("
 				+ row.r_t_round + ")'>志愿时间</a>";
 		 		return del; 
 			 }
@@ -82,7 +88,7 @@ function initBasicGrid() {
 		 
 		  {field:  'option',title:'操作',width:getWidth(0.17),align:'center',
 		 	formatter : function(value, row, index) {
-	 			var del = "<a href='#'  style='color:blue;text-decoration: none;' onclick='confirmDel("
+	 			var del = "<a href='#' class='delcls' style='color:blue;text-decoration: none;' onclick='confirmDel("
 				+index+ ")'>删除</a>";
 		 		return del; 
 			 }
@@ -98,6 +104,8 @@ function initBasicGrid() {
 		
 		onLoadSuccess : function(data) {
 			$(this).datagrid('doCellTip',{});
+			$('.delcls').linkbutton({text : '删除',plain : true,iconCls : 'icon-trash'});
+			$('.timecls').linkbutton({text : '志愿时间',plain : true,iconCls : 'icon-time'});
 
 		},
 		

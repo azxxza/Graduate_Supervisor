@@ -37,39 +37,12 @@ public class StudentVolunteerController extends BaseController {
 
 	public void saveStudentVolunteer() {
 
+		String para = getPara("para");
+
 		String s_id = getId();
 
-		MessageBean messageBean = new MessageBean();
-
-		boolean hasExit = LogicTeacherStudent
-				.exitLogicTeacherStudentBySId(getId());
-
-		if (hasExit) {
-			messageBean.setFlag(false);
-			messageBean.setMessage("您已经有导师了");
-		} else {
-			String para = getPara("para");
-
-			if ((para != null) && (!para.equals(""))) {
-				String[] pairArray = para.split(";");
-
-				for (int i = 0; i < pairArray.length; i++) {
-					String pair = pairArray[i];
-					String[] elementArray = pair.split(",");
-					String t_work_id = elementArray[0];
-					String s_t_volunteer = elementArray[1];
-
-					LogicStudentVolunteer volunteer = new LogicStudentVolunteer();
-					volunteer.set("s_id", s_id);
-					volunteer.set("t_work_id", t_work_id);
-					volunteer.set("s_t_volunteer", s_t_volunteer);
-					volunteer.save();
-				}
-
-				messageBean.setFlag(true);
-			}
-
-		}
+		MessageBean messageBean = volunteerService.doStudentVolunteer(para,
+				s_id);
 
 		renderJson(messageBean);
 	}
@@ -105,50 +78,15 @@ public class StudentVolunteerController extends BaseController {
 		renderJson(messageBean);
 	}
 
+	/**
+	 * 教师选择学生
+	 */
 	public void teacherSelect() {
-		MessageBean messageBean = new MessageBean();
+
 		String total_id = getPara("total_id");
 
-		if ((total_id != null) && (!total_id.equals(""))) {
-			String[] pairArry = total_id.split(";");
-
-			for (int i = 0; i < pairArry.length; i++) {
-				String s_id = pairArry[i];
-
-				LogicTeacherStudent logicTeacherStudent = new LogicTeacherStudent();
-
-				logicTeacherStudent.set("t_work_id", getId());
-
-				logicTeacherStudent.set("s_id", s_id);
-
-				MessageBean messageBean2 = LogicTeacherStudent
-						.saveLogicTeacherStudent(logicTeacherStudent);
-
-				if (!messageBean2.getFlag()) {
-					messageBean.setFlag(false);
-					messageBean.setMessage(messageBean2.getMessage());
-					break;
-				}
-				messageBean.setFlag(true);
-
-				LogicStudentVolunteer logicStudentVolunteer = LogicStudentVolunteer
-						.getVolunteerByWorkIdAndSId(s_id, getId());
-
-				if (logicStudentVolunteer != null) {
-					LogicStudentVolunteer.deleteVolunteerBySId(s_id);
-				}
-
-				long count = InfoTeacherBasic
-						.getTeacherStudentRestNumberByWorkId(getId())
-						.longValue();
-
-				if (count == 0L) {
-					LogicStudentVolunteer.deleteNotSelectedByWorkId(getId());
-				}
-
-			}
-
-		}
+		MessageBean messageBean = volunteerService.doTeacherVolunteer(total_id,
+				getId());
 
 		renderJson(messageBean);
 	}

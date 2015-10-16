@@ -8,6 +8,11 @@
 <%@ include file="/jsp/common/taglibs.jsp"%>
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script language="javascript">
 function unitFormatter(value, rowData, rowIndex) { 
 	 
@@ -32,24 +37,24 @@ function initBasicGrid() {
 		loadMsg : '正在加载数据',
 		pagination : true,
 		emptyMsg : '没有相关记录',
+		rownumbers:true,
 		striped:true,
-		url : '${ctx}/studentBase/getStudentBaseList?Date='
+		url : '${ctx}/studentBase/getAllStudentBaseList?Date='
 				+ new Date() + '',
 
 		 columns : [ [
-		 {field : 's_t_id',checkbox:false},
-		 {field : 'count',title:'人数',hidden:false},
+		 {field : 'id',hidden:true},
 	 	 {field : 's_id',title : '学号',width : getWidth(0.2),align : 'center'},
 	 	 {field : 's_name',title : '姓名',width : getWidth(0.2),align : 'center'},
-	 	 {field : 's_sex',title : '性别',width : getWidth(0.2),align : 'center'},
-	 	  {field:  'detail',title:'详细信息',width:getWidth(0.15),align:'center',
+	 	 {field : 's_sex',title : '性别',width : getWidth(0.15),align : 'center'},
+	 	  {field:  'detail',title:'详细信息',width:getWidth(0.2),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue;text-decoration:none' onclick='detail("+index+")'>智育成绩</a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='detail("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
 		 
-	 	 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.15),align:'center',
+	 	 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.2),align:'center',
 	 	 	formatter: function(value,row,index){
 				return '第 '+ value + ' 志愿';
        		 } 
@@ -58,7 +63,14 @@ function initBasicGrid() {
 
 		onLoadError : function() {
 			$.messager.alert('提示信息','数据加载失败','error');
-		}
+		},
+		
+		onLoadSuccess : function(data) {
+			$('.detailcls').linkbutton({text : '智育成绩',plain : true,iconCls : 'icon-search'});
+			
+			$(this).datagrid('doCellTip',{});
+
+		},
 		
 	});
 	
@@ -90,78 +102,14 @@ jQuery(function() {
 	
 });
 
-function select(){
-	var rows = jQuery("#basicGrid_div").datagrid("getSelections");
-	
-	if (rows == null || rows == ""){
-		window.alert('还未选择数据');
-		return;
-	}
-	
-	
-	teacher_select(rows);
-		
-}
-
-function teacher_select(rows){
-
-	var idArray = new Array();
-	var total_id = "";
-	
-	for(var i = 0;i<rows.length;i++){
-	
-		if(rows.length > rows[i].count ){
-			alert("名额已超过");
-			return;
-		}
-		
-		idArray.push(rows[i].s_id);
-		total_id = idArray.join(";");
-	}
-	
-	alert(total_id);
-	
-	var URL = "${pageContext.request.contextPath}/studentVolunteer/teacherSelect?date="+new Date()+"";
-	var paramObj = {
-			"total_id":			total_id
-	};
-	
-	jQuery.get(URL,paramObj,function(jsonData){
-		
-		var flag = jsonData.flag;
-	
-		if (flag == true){
-			
-			window.alert("操作成功");
-			jQuery("#basicGrid_div").datagrid("reload");
-				
-		} else {
-			window.alert("操作失败");
-		}
-	}, "json");
-	
-}
-
-
-
-
 </script>
 </head>
 <body class="easyui-layout">
 
-	<div id="toobar"  style="padding-right: 5%;">
-	
-		<privilege:show powerName="menu_teacher">
-	
-			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="select();">选择学生</a>
-		
-		</privilege:show>
-		
-	</div>
 	
 	<privilege:show powerName="menu_teacher">
 
-	<div id="basic_div" data-options="region:'center',title:'教师基本信息列表'">
+	<div id="basic_div" data-options="region:'center',title:'所有学生信息列表'">
 		
 		<div id="basicGrid_div"></div>
 		

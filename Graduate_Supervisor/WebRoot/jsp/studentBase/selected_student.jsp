@@ -7,32 +7,12 @@
 <%@ include file="/jsp/common/taglibs.jsp"%>
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script language="javascript">
-function unitFormatter(value, rowData, rowIndex) { 
-	 if(value == "1"){
-	 	return "第一志愿";
-	 } else 
-	 
-	  if(value == "2"){
-	 	return "第二志愿";
-	 } else 
-	 
-	  if(value == "3"){
-	 	return "第三志愿";
-	 } else 
-	 
-	  if(value == "4"){
-	 	return "第四志愿";
-	 } else 
-	 
-	  if(value == "5"){
-	 	return "第五志愿";
-	 } else {
-	 	return "";
-	 }
-	 
-   
-}  
 
 /*
  * 表格初始化
@@ -55,13 +35,20 @@ function initBasicGrid() {
 		 columns : [ [
 		 {field : 's_t_id',hidden:true},
 		 {field : 't_work_id',hidden:true},
-	 	 {field : 's_id',title : '学号',width : getWidth(0.3),align : 'center'},
-	 	 {field : 's_name',title : '姓名',width : getWidth(0.3),align : 'center'},
-	 	 {field : 's_sex',title : '性别',width : getWidth(0.3),align : 'center'}
+	 	 {field : 's_id',title : '学号',width : getWidth(0.25),align : 'center'},
+	 	 {field : 's_name',title : '姓名',width : getWidth(0.25),align : 'center'},
+	 	 {field : 's_sex',title : '性别',width : getWidth(0.2),align : 'center'},
+	 	 {field:  'detail',title:'详细信息',width:getWidth(0.25),align:'center',
+       		 formatter: function(value,row,index){
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='detail("+index+")'></a>";  
+				 return detail; 
+       		 } 
+		 },
 		] ],
 		
 		onLoadSuccess : function(data) {
 			$('.delcls').linkbutton({text : '删除学生',plain : true,iconCls : 'icon-trash'});
+			$('.detailcls').linkbutton({text : '智育成绩',plain : true,iconCls : 'icon-search'});
 			
 
 		},
@@ -91,13 +78,7 @@ jQuery(function() {
 </head>
 <body class="easyui-layout">
 
-	
-
-	<div id="toobar"  style="padding-right: 5%;">
-		
-	</div>
-	
-	<div id="basic_div" data-options="region:'center',title:'教师基本信息列表'">
+	<div id="basic_div" data-options="region:'center',title:'学生信息列表'">
 		<div id="basicGrid_div"></div>
 	</div>
 

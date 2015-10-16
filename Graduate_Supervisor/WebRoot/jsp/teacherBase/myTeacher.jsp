@@ -34,7 +34,7 @@ function initBasicGrid() {
 		 {field : 't_email',title : 'Email',width : getWidth(0.11),align : 'center'},
 		 {field:  'detail',title:'详细信息',width:getWidth(0.11),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue' onclick='detail("+index+")'>更多</a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none'  onclick='detail("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
@@ -50,6 +50,7 @@ function initBasicGrid() {
 
 		onLoadSuccess : function(data) {
 			$('.delcls').linkbutton({text : '通过',plain : true,iconCls : 'icon-ok'});
+			$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
 			$(this).datagrid('doCellTip',{});
 
 		},

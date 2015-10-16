@@ -15,7 +15,8 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 	public static final InfoTeacherBasic dao = new InfoTeacherBasic();
 
 	private static void setVolunteer(InfoTeacherBasic teacherBasic, String s_id) {
-		if ((s_id != null) && (!s_id.equals(""))) {
+		if (s_id != null && !s_id.equals("")) {
+			teacherBasic.put("t_number_copy",teacherBasic.getInt("t_number"));
 			LogicStudentVolunteer volunteer = LogicStudentVolunteer
 					.getVolunteerByWorkIdAndSId(s_id,
 							teacherBasic.getStr("t_work_id"));
@@ -35,7 +36,7 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 			String s_id) {
 		String t_work_id = teacherBasic.getStr("t_work_id");
 
-		Long rest_number = getTeacherStudentRestNumberByWorkId(t_work_id);
+		int rest_number = getTeacherStudentRestNumberByWorkId(t_work_id);
 
 		teacherBasic.put("rest_number", rest_number);
 
@@ -83,35 +84,32 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 	}
 
 	public static InfoTeacherBasic getTmsTeacher(String t_work_id) {
-		try {
-			return (InfoTeacherBasic) dao.findById(t_work_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+
+		return dao.findById(t_work_id);
+
 	}
 
-	public static Long getTeacherStudentRestNumberByWorkId(String t_work_id) {
-		InfoTeacherBasic infoTeacherBasic = (InfoTeacherBasic) dao
-				.findById(t_work_id);
+	public static int getTeacherStudentRestNumberByWorkId(String t_work_id) {
+		InfoTeacherBasic infoTeacherBasic = dao.findById(t_work_id);
 
-		Integer t_number = infoTeacherBasic.getInt("t_number");
+		int t_number = infoTeacherBasic.getInt("t_number");
 
-		Long number = null;
+		int number = 0;
 
-		if (t_number != null) {
-			number = Long.valueOf(t_number.longValue()
-					- getTeacherStudentNumberByWorkId(t_work_id).longValue());
+		if (t_number != 0) {
+			number = t_number - getTeacherStudentNumberByWorkId(t_work_id);
 		}
 
 		return number;
 	}
 
-	public static Long getTeacherStudentNumberByWorkId(String t_work_id) {
+	public static int getTeacherStudentNumberByWorkId(String t_work_id) {
 		String sql = "select count(1) from logic_teacher_student where t_work_id =  "
 				+ t_work_id;
 
-		return Db.queryLong(sql);
+		Long count = Db.queryLong(sql);
+
+		return count.intValue();
 	}
 
 	public int compareTo(InfoTeacherBasic o) {
@@ -139,7 +137,8 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> implements
 		if (t_work_id == "") {
 			return null;
 		}
-		String sql = "select * from i_teacher where t_work_id = " + t_work_id;
+		String sql = "select * from info_teacher_basic where t_work_id = "
+				+ t_work_id;
 		try {
 			return dao.find(sql);
 		} catch (Exception e) {

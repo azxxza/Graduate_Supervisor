@@ -13,26 +13,25 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 	public static final LogicStudentVolunteer dao = new LogicStudentVolunteer();
 
 	public static void setName(LogicStudentVolunteer volunteer) {
-		String s_id = (String) volunteer.get("s_id");
+		String s_id = volunteer.getStr("s_id");
 
 		if ((s_id != null) && (!s_id.equals(""))) {
 			InfoStudentBasic student = InfoStudentBasic.getStudent(s_id);
 
 			if (student != null) {
-				String s_name = (String) student.get("s_name");
+				String s_name = student.getStr("s_name");
 				volunteer.put("s_name", s_name);
 
 				InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
-						.getTmsTeacher((String) volunteer.get("t_work_id"));
+						.getTmsTeacher(volunteer.getStr("t_work_id"));
 
-				Integer totalCount = (Integer) infoTeacherBasic.get("t_number");
+				Integer totalCount = infoTeacherBasic.getInt("t_number");
 
-				Long selecedtCount = InfoTeacherBasic
-						.getTeacherStudentNumberByWorkId((String) volunteer
-								.get("t_work_id"));
+				int selecedtCount = InfoTeacherBasic
+						.getTeacherStudentNumberByWorkId(volunteer
+								.getStr("t_work_id"));
 
-				Long count = Long.valueOf(totalCount.longValue()
-						- selecedtCount.longValue());
+				int count = totalCount - selecedtCount;
 
 				volunteer.put("count", count);
 			}
@@ -44,22 +43,12 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static LogicStudentVolunteer getVolunteerByWorkIdAndSId(String s_id,
 			String t_work_id) {
-		try {
-			List<LogicStudentVolunteer> list = dao
-					.find("select * from logic_student_volunteer where t_work_id = "
-							+ t_work_id + " and s_id = " + s_id);
 
-			System.out
-					.println("select * from l_student_volunteer where t_work_id = "
-							+ t_work_id + " and s_id = " + s_id);
-			if ((list != null) && (list.size() > 0)) {
-				return (LogicStudentVolunteer) list.get(0);
-			}
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+		String sql = "select * from logic_student_volunteer where t_work_id = "
+				+ t_work_id + " and s_id = " + s_id;
+
+		return dao.findFirst(sql);
+
 	}
 
 	public static LogicStudentVolunteer getVolunteerBySId(String s_id) {
@@ -72,10 +61,10 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static QueryResult<LogicStudentVolunteer> getVolunteerResultByWorkId(
 			Integer page, Integer rows, String t_work_id) {
+
 		String sql = "from l_student_volunteer where t_work_id = '" + t_work_id
 				+ "' and s_is_selected = 0";
 
-		System.out.println(sql);
 		try {
 			Page<LogicStudentVolunteer> pageList = dao.paginate(
 					page.intValue(), rows.intValue(), "Select * ", sql);
@@ -83,7 +72,7 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 			List<LogicStudentVolunteer> list = pageList.getList();
 
 			for (int i = 0; i < list.size(); i++) {
-				setName((LogicStudentVolunteer) list.get(i));
+				setName(list.get(i));
 			}
 
 			long count = Db.queryLong("select count(1) " + sql).longValue();
@@ -123,7 +112,7 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static List<LogicStudentVolunteer> getNotSelectedByWorkId(
 			String t_work_id) {
-		String sql = "select * from l_student_volunteer where t_work_id = "
+		String sql = "select * from logic_student_volunteer where t_work_id = "
 				+ t_work_id;
 
 		return dao.find(sql);
@@ -132,9 +121,9 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static boolean deleteNotSelectedByWorkId(String t_work_id) {
 		List<LogicStudentVolunteer> list = getNotSelectedByWorkId(t_work_id);
-		if ((list != null) && (list.size() > 0)) {
+		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
-				boolean flag = ((LogicStudentVolunteer) list.get(i)).delete();
+				boolean flag = list.get(i).delete();
 				if (!flag) {
 					return false;
 				}
@@ -146,7 +135,8 @@ public class LogicStudentVolunteer extends Model<LogicStudentVolunteer> {
 
 	public static List<LogicStudentVolunteer> getLogicStudentVolunteerListBySId(
 			String s_id) {
-		String sql = "select * from l_student_volunteer where s_id = " + s_id;
+		String sql = "select * from logic_student_volunteer where s_id = "
+				+ s_id;
 
 		return dao.find(sql);
 	}

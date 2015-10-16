@@ -4,14 +4,63 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.core.JFinal;
 import com.model.InfoStudentBasic;
-import com.model.VolunteerTime;
+import com.model.InfoTeacherBasic;
 import com.system.CurrentExcuteVolunteer;
 import com.util.QueryResult;
 
 public class StudentBaseController extends BaseController {
 	public void candidate_student() {
 		render("candidate_student.jsp");
+	}
+
+	public void getAllStudentBaseList() {
+
+		int page = getParaToInt("page");
+		int rows = getParaToInt("rows");
+
+		QueryResult<InfoStudentBasic> queryResult = InfoStudentBasic
+				.getStudentResultWithVolunteerByWorkId(page, rows, getId());
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+
+		List<InfoStudentBasic> list = queryResult.getList();
+
+		jsonMap.put("rows", list);
+
+		jsonMap.put("total", queryResult.getCount());
+
+		renderJson(jsonMap);
+	}
+
+	public void can_select_student() {
+		int count = InfoTeacherBasic
+				.getTeacherStudentRestNumberByWorkId(getId());
+		if (count <= 0) {
+			setAttr("can_select", false);
+			setAttr("rest_count", 0);
+			
+		} else {
+			setAttr("can_select", true);
+			setAttr("rest_count", count);
+		}
+		render("can_select_student.jsp");
+	}
+
+	public void getCanSelectStudentBaseList() {
+		CurrentExcuteVolunteer currentExcuteVolunteer = CurrentExcuteVolunteer
+				.getCurrentExcuteVolunteer();
+
+		if (currentExcuteVolunteer.isRunning()) {
+			render("curr_volun_student.jsp");
+		} else {
+
+			String path = JFinal.me().getContextPath()
+					+ "/jsp/common/no_open.jsp";
+
+			render(path);
+		}
 	}
 
 	public void selected_student() {
@@ -40,33 +89,6 @@ public class StudentBaseController extends BaseController {
 		jsonMap.put("total", queryResult.getCount());
 
 		renderJson(jsonMap);
-	}
-
-	public void volunteer_student() {
-		render("no_open.jsp");
-	}
-
-	public void getStudentBaseList() {
-
-		CurrentExcuteVolunteer currentExcuteVolunteer = CurrentExcuteVolunteer
-				.getCurrentExcuteVolunteer();
-
-		if (currentExcuteVolunteer.isRunning()) {
-			render("curr_volun_student.jsp");
-		} else {
-			VolunteerTime volunteerTime = currentExcuteVolunteer
-					.getVolunteerTime();
-			if (volunteerTime != null) {
-				int r_t_round = volunteerTime.get("r_t_round");
-				int v_volunteer = volunteerTime.get("v_volunteer");
-				setSessionAttr("message", "非常遗憾，第 " + r_t_round + " 轮,第 "
-						+ v_volunteer + " 志愿录取已经结束，请等待下一志愿录取时间或下一轮录取时间");
-			} else {
-				setSessionAttr("message", "非常遗憾，系统还未在指定的时间开放");
-			}
-
-			render("no_open.jsp");
-		}
 	}
 
 	public void getUnselectStudentList() {

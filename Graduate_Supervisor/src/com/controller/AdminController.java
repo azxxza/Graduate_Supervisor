@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import com.model.LogicTeacherStudent;
 import com.model.SysOpenTime;
 import com.model.VolunteerTime;
 import com.util.ExcelExportUtil;
+import com.util.ItemBean;
 import com.util.MessageBean;
 import com.util.QueryResult;
 
@@ -128,14 +130,12 @@ public class AdminController extends BaseController {
 	}
 
 	public void getAllocNumberList() {
-		QueryResult<InfoTeacherBasic> queryResult = null;
 
 		int page = getParaToInt("page").intValue();
 		int rows = getParaToInt("rows").intValue();
 
-		String s_id = getId();
-
-		queryResult = InfoTeacherBasic.getTeacherBaseResult(page, rows, s_id);
+		QueryResult<InfoTeacherBasic> queryResult = InfoTeacherBasic
+				.getTeacherBaseResult(page, rows, getId());
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
@@ -196,11 +196,9 @@ public class AdminController extends BaseController {
 				logicTeacherStudent.set("t_work_id", t_work_id);
 				logicTeacherStudent.set("s_id", s_id);
 
-				MessageBean messageBean2 = LogicTeacherStudent
-						.saveLogicTeacherStudent(logicTeacherStudent);
+				boolean flag = logicTeacherStudent.save();
 
-				messageBean.setFlag(messageBean2.getFlag());
-				messageBean.setMessage(messageBean2.getMessage());
+				messageBean.setFlag(flag);
 			}
 
 		}
@@ -308,29 +306,29 @@ public class AdminController extends BaseController {
 
 		String t_work_id = getSessionAttr("t_work_id");
 
-		t_work_id = getPara("t_work_id");
-
-		System.out.println(t_work_id);
-
 		MessageBean messageBean = new MessageBean();
 
 		ServletContext context = JFinal.me().getServletContext();
 
-		String realpath = context.getRealPath("/word/");
+		String realpath = context.getRealPath("/pdf/");
 
 		try {
 
-			UploadFile uploadFile = getFile("word", realpath,
-					200 * 1024 * 1024, "UTF-8");
+			UploadFile uploadFile = getFile("pdf", realpath, 200 * 1024 * 1024,
+					"UTF-8");
 
 			InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
 					.getTmsTeacher(t_work_id);
 
 			infoTeacherBasic.set("t_file_path", uploadFile.getFileName());
 
-			infoTeacherBasic.update();
+			boolean flag = infoTeacherBasic.update();
 
-			messageBean.setFlag(true);
+			messageBean.setFlag(flag);
+
+			if (!flag) {
+				messageBean.setMessage("数据库数据更新失败");
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -339,6 +337,37 @@ public class AdminController extends BaseController {
 		}
 
 		render("importTeacher.jsp");
+	}
+
+	public void getTeacherJson() {
+		QueryResult<InfoTeacherBasic> queryResult = InfoTeacherBasic
+				.getTeacherBaseResult(0, 0, "");
+		List<InfoTeacherBasic> list = null;
+
+		List<ItemBean> treeList = new ArrayList<ItemBean>();
+
+		if (queryResult != null) {
+			list = queryResult.getList();
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					InfoTeacherBasic infoTeacherBasic = list.get(i);
+					String t_work_id = infoTeacherBasic.get("t_work_id");
+					if (t_work_id != null && !t_work_id.equals("")) {
+						long count = InfoTeacherBasic
+								.getTeacherStudentRestNumberByWorkId(t_work_id);
+						if (count > 0) {
+							treeList.add(new ItemBean(t_work_id,
+									infoTeacherBasic.getStr("t_name")));
+						}
+					}
+
+				}
+
+			}
+		}
+
+		renderJson(treeList);
+
 	}
 
 	public void deleteTeacher() {

@@ -1,12 +1,13 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-	<head>
-		<title>基本信息列表</title>
-		<%@ include file="/jsp/common/meta.jsp"%>
-		<%@ include file="/jsp/common/easyui.jsp"%>
-		<%@ include file="/jsp/common/taglibs.jsp"%>
-		<script language="javascript">
+<head>
+<title>基本信息列表</title>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/easyui.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
+<script language="javascript">
 var para = undefined;
 var array = new Array();
 var unitJSON;
@@ -88,22 +89,22 @@ function initBasicGrid() {
 	 	    editor : {  type : 'combobox',  options : { 
 			  	 id : 'combo', 
 			  	 editable : false,
-			  	 url : '${ctx}/teacherBase/getTeacherJson',
+			  	 url : '${ctx}/admin/getTeacherJson',
           		 valueField : "value",/* value是unitJSON对象的属性名 */  
            		 textField : "text",/* name是unitJSON对象的属性名 */ 
-           			icons: [{
-							iconCls:'icon-clear',
-								handler: function(e){
-									$(e.data.target).textbox('clear');
-								}
-							}],
-  					onLoadSuccess : function(data) {
-  					
-  						unitJSON = data;
-       					
-					}
-           		 }
-         	  },
+          		icons: [{
+					iconCls:'icon-clear',
+						handler: function(e){
+							$(e.data.target).textbox('clear');
+						}
+					}],
+ 				onLoadSuccess : function(data) {
+ 					
+ 					unitJSON = data;
+      					
+				}
+           	}
+         	},
 	 	  }
 		] ],
 		

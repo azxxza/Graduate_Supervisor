@@ -202,15 +202,15 @@
 			<privilege:show powerName="menu_teacher">
 				<div title="师生互选" data-options="iconCls:'icon-reload'">
 				<ul id="ttt_4">
-					<li data-options="iconCls:'icon-table-refresh',url:'${ctx}/studentBase/candidate_student'"><span>所有学生列表</span></li>
-					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/volunteer_student'"><span>当前志愿可录取学生列表</span></li>
+					<li data-options="iconCls:'icon-table-refresh',url:'${ctx}/studentBase/candidate_student'"><span>预览所有学生</span></li>
+					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/can_select_student'"><span>当前志愿可录取学生列表</span></li>
 				</ul>
 				
 				</div>
 				
 				<div title="选择结果" data-options="iconCls:'icon-ok'">
 				<ul id="ttt_5">
-					<li data-options="iconCls:'icon-ok',url:'${ctx}/studentBase/selected_student'"><span>已完成选择学生列表</span></li>
+					<li data-options="iconCls:'icon-ok',url:'${ctx}/studentBase/selected_student'"><span>已选择学生列表</span></li>
 				</ul>
 				</div>
 			</privilege:show>

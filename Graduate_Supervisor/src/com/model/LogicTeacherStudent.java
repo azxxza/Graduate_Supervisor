@@ -5,7 +5,6 @@ import java.util.List;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import com.util.MessageBean;
 import com.util.QueryResult;
 
 public class LogicTeacherStudent extends Model<LogicTeacherStudent> {
@@ -76,24 +75,5 @@ public class LogicTeacherStudent extends Model<LogicTeacherStudent> {
 
 	}
 
-	public static MessageBean saveLogicTeacherStudent(
-			LogicTeacherStudent logicTeacherStudent) {
-		MessageBean messageBean = new MessageBean();
-
-		String t_work_id = logicTeacherStudent.getStr("t_work_id");
-		long count = InfoTeacherBasic.getTeacherStudentRestNumberByWorkId(
-				t_work_id).longValue();
-		if (count <= 0) {
-			messageBean.setFlag(false);
-			messageBean.setMessage("保存失败，教师已经没有剩余名额");
-			System.out.println("保存失败");
-		} else {
-			logicTeacherStudent.save();
-			messageBean.setFlag(true);
-			messageBean.setMessage("保存成功");
-			System.out.println("保存失败");
-		}
-
-		return messageBean;
-	}
+	
 }

@@ -211,7 +211,7 @@ function cancelUpload(){
         <div style="height: 30%;"></div>
         
        <form id="uploadForm"
-			action="${ctx}/teacherBase/uploadPDF"
+			action="${ctx}/admin/uploadPDF"
 			name="uploadForm" method="post" enctype="multipart/form-data">
 			 <input type="hidden" name="t_work_id" id="f_t_work_id">
         	 <input  id="pdf" name="pdf" class="easyui-filebox" data-options="buttonText:'选择pdf文件'"><br><br>

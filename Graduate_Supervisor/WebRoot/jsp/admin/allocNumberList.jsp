@@ -76,6 +76,7 @@ function initBasicGrid() {
 		 },
 		 
 		 {field : 't_number',title : '名额(单击单元格可分配名额)',width : getWidth(0.2),align : 'center',editor:{type:'numberbox'}},
+		 {field : 't_number_copy',hidden:true},
 
 		] ],
 
@@ -125,14 +126,21 @@ function submitData(){
 	
 	var rows = data.rows;
 	
+	
 	for(var i = 0;i<rows.length;i++){
 		
 		var t_number = rows[i].t_number;
-		if (t_number != undefined && t_number != ""){
+		var t_number_copy = rows[i].t_number_copy;
+		if (t_number != t_number_copy){
 			var par = rows[i].t_work_id + "," + rows[i].t_number;
 			array.push(par);
 		}
 	
+	}
+	
+	if(array.length == 0){
+		$.messager.alert('提示信息','没有可以提交的数据','warning');
+		return;
 	}
 	
 	para = array.join(";");
@@ -159,7 +167,6 @@ function submitData(){
 				$.messager.alert('提示信息', '提交失败','error',function(){
 					jQuery("#basicGrid_div").datagrid("reload");
 				});
-				
 				
 			}
 			

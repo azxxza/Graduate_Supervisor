@@ -29,7 +29,7 @@ import com.model.SysUser;
 import com.model.VolunteerTime;
 
 public class CommonConfig extends JFinalConfig {
-	public static final String loginPath = "/login";
+	
 
 	public void configConstant(Constants me) {
 		

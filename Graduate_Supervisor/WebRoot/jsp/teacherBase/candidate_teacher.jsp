@@ -58,6 +58,10 @@ function onClickCell(index, field){
 		}
 	}
 	
+	$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
+	$('.delcls').linkbutton({text : '删除志愿',plain : true,iconCls : 'icon-trash'});
+	$('.addcls').linkbutton({text : '添加志愿',plain : true,iconCls : 'icon-add'});
+	
 }
 	
 /*
@@ -300,14 +304,18 @@ function save(){
 	}
 	
 	if(count < 1){
-		$.messager.alert('提示信息','没有选择志愿','warning');
-		jQuery("#basicGrid_div").datagrid("reload");
+		$.messager.alert('提示信息','没有选择志愿','warning',function(){
+			jQuery("#basicGrid_div").datagrid("reload");
+		});
+		
 		return;
 	}
 	
 	if(count > 5){
-		$.messager.alert('提示信息','一人只能选择5个志愿','warning');
-		jQuery("#basicGrid_div").datagrid("reload");
+		$.messager.alert('提示信息','一人只能选择5个志愿','warning',function(){
+			jQuery("#basicGrid_div").datagrid("reload");
+		});
+		
 		return;
 	}
 	
@@ -315,21 +323,21 @@ function save(){
 	var jsonPara = {"para" : para};
 	
 	if(para != undefined){
-		var  saveURL = "${pageContext.request.contextPath}/studentVolunteer/saveStudentVolunteer?date="
+		var  saveURL = "${ctx}/studentVolunteer/saveStudentVolunteer?date="
 				+ new Date() + "";
 	
 		jQuery.post(saveURL,jsonPara,function(jsonData) {
 			var flag = jsonData.flag;
-			
+			var message = jsonData.message;
 			if(flag == true){
-				$.messager.alert('提示信息','恭喜您，提交成功','info',function(){
+				$.messager.alert('提示信息',message,'info',function(){
 					jQuery("#basicGrid_div").datagrid("reload");
 				});
 				
 			
 			}else {
-				var message = jsonData.message;
-				$.messager.alert('提示信息','提交失败,原因为：'+message,'error',function(){
+				
+				$.messager.alert('提示信息',message,'error',function(){
 					jQuery("#basicGrid_div").datagrid("reload");
 				});
 				

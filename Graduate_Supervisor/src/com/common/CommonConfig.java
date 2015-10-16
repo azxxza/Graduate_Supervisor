@@ -7,6 +7,7 @@ import com.controller.StudentVolunteerController;
 import com.controller.SystemController;
 import com.controller.TeacherBaseController;
 import com.controller.TeacherStudentController;
+import com.controller.UserController;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -56,6 +57,8 @@ public class CommonConfig extends JFinalConfig {
 		me.add("/", SystemController.class, "system");
 
 		me.add("/login", LoginController.class, "/system");
+		
+		me.add("/user", UserController.class);
 	}
 
 	public void configPlugin(Plugins me) {
@@ -84,9 +87,9 @@ public class CommonConfig extends JFinalConfig {
 
 		arp.addMapping("sys_volunteer_open_time", "id", VolunteerTime.class);
 
-		// QuartzPlugin plugin = new QuartzPlugin();
-		//
-		// me.add(plugin);
+//		 QuartzPlugin plugin = new QuartzPlugin();
+//		
+//		 me.add(plugin);
 	}
 
 	public static void main(String[] args) {

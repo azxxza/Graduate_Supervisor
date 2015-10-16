@@ -14,7 +14,7 @@
 
 	<div align="center" style="text-align: center;">
 
-	<img alt="" src="${ctx}/images/key.png"> 
+	<img alt="" src="${ctx}/images/no_open.png"> 
 	
 	<div style="height: 4%;"></div> 
 	

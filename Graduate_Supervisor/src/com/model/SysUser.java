@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.List;
+
 import com.jfinal.plugin.activerecord.Model;
 
 @SuppressWarnings("serial")
@@ -27,5 +29,7 @@ public class SysUser extends Model<SysUser> {
 		return dao.findFirst(sql);
 
 	}
+
+	
 
 }

@@ -8,7 +8,14 @@
 <%@ include file="/jsp/common/taglibs.jsp"%>
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
-
+<style type="text/css">
+	.textbox {
+		height: 20px;
+		margin: 0;
+		padding: 0 2px;
+		box-sizing: content-box;
+	}
+</style>
 <script type="text/javascript">
 	$(function() {
 		for (var i = 1; i <= 8; i++) {
@@ -70,12 +77,60 @@
 	}
 	
   	function logout(){
+  	
 		window.location.href = "${ctx}/login/logout";
 		
-       }
+      }
         
      function closeTab(title){
 		$('#main').tabs('close',title);
+	}
+	
+	function goHome(){
+		addTabs('后台首页', '');
+	}
+	
+	function savePassword(){
+	
+		var oginal = $('#oginal').val();
+
+		var password = $('#password').val();
+		
+		var com_password = $('#com_password').val();
+		
+		if(password != com_password){
+			$.messager.alert('提示信息', '原始密码和确认密码不一致','warning');
+			return;
+		}
+		
+		if($("#passwordForm").form('validate')){
+		
+			var formData = jQuery("#passwordForm").serializeArray();
+			
+			var saveURL =  "${ctx}/user/updatePassword?date="
+				+ new Date() + "";
+		
+			jQuery.post(saveURL, formData, function(jsonData) {
+				var flag = jsonData.flag;
+				
+				if (flag == true) {
+					$.messager.alert('提示信息', '密码修改成功','info');
+					closeWin();
+		
+				} else {
+					var message = jsonData.message;
+					$.messager.alert('提示信息', '修改失败,原因：' + message,'error');
+		
+				}
+			}, "json");
+		
+		}
+		
+		
+	}
+	
+	function closeWin(){
+		$('#loginDialog').dialog('close');
 	}
         
 </script>
@@ -189,29 +244,32 @@
 </div>
 
 <div  region="south" style="text-align:center; background-color: #6ac5f4; height: 25px; font-size: 13px;">
-<div style="height: 4px;"></div>福建农林大学 国际处 </div>
+<div style="height: 4px;"></div>福建农林大学  计算机与信息学院 </div>
 <div class="easyui-dialog" id="loginDialog" style="width:400px;height:300px;" data-options="title:'修改密码',modal:true,iconCls:'icon-key',closed:true">
+	<form id="passwordForm">
 	<table style="padding-left: 50px; padding-top: 50px; font-size: 13px;" cellpadding="5px;">
 		<tr>
 			<td>原始密码:</td>
-			<td><input class="easyui-textbox"></td>
+			<td><input class="easyui-validatebox textbox" type="password" id="oginal" name="oginal" data-options=" required:true,validType:'length[3,20]',missingMessage:'原始密码不为空'"></td>
 		</tr>
 		
 		<tr>
 			<td>新密码:</td>
-			<td><input class="easyui-textbox"></td>
+			<td><input class="easyui-validatebox textbox" type="password" id="password" name="password" data-options=" required:true,validType:'length[3,20]',missingMessage:'新密码不为空'"></td>
 		</tr>
 		
 		<tr>
 			<td>确认密码:</td>
-			<td><input class="easyui-textbox"></td>
+			<td><input class="easyui-validatebox textbox" type="password" id="com_password" name="com_password" data-options=" required:true,validType:'length[3,20]',missingMessage:'确认密码不为空'"></td>
 		</tr>
 		
 	</table>
 	
+	</form>
+	
 	<table style="text-align: center; padding-left: 80px;" cellpadding="15px;">
 		<tr>
-			<td><a href="javascript:void(0)" onclick="closeWin()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">保存修改</a></td>
+			<td><a href="javascript:void(0)" onclick="savePassword()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">保存修改</a></td>
 			<td><a href="javascript:void(0)" onclick="closeWin()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭窗口</a></td>
 		</tr>
 	</table>

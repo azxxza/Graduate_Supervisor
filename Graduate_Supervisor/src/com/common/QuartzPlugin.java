@@ -14,63 +14,52 @@ import org.slf4j.LoggerFactory;
 
 import com.jfinal.plugin.IPlugin;
 
-public class QuartzPlugin
-  implements IPlugin
-{
-  private Logger logger = LoggerFactory.getLogger(getClass());
-  private SchedulerFactory sf = null;
-  private Scheduler sched = null;
+public class QuartzPlugin implements IPlugin {
 
-  public boolean start() {
-    this.sf = new StdSchedulerFactory();
-    try {
-      this.sched = this.sf.getScheduler();
-    } catch (SchedulerException e) {
-      new RuntimeException(e);
-    }
-    this.sf = new StdSchedulerFactory();
-    Scheduler sched = null;
-    try {
-      sched = this.sf.getScheduler();
-    }
-    catch (SchedulerException e1) {
-      e1.printStackTrace();
-    }
-    try {
-      sched.start();
-    }
-    catch (SchedulerException e1) {
-      e1.printStackTrace();
-    }
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
-    JobDetail job = JobBuilder.newJob(HelloJob.class).withIdentity("myJob", "group1")
-      .build();
+	private Scheduler sched = null;
 
-    Trigger trigger = TriggerBuilder.newTrigger()
-      .withIdentity("myTrigger", "group1")
-      .startNow()
-      .withSchedule(
-      SimpleScheduleBuilder.simpleSchedule()
-      .withIntervalInSeconds(40).repeatForever())
-      .build();
-    try
-    {
-      sched.scheduleJob(job, trigger);
-    }
-    catch (SchedulerException e) {
-      e.printStackTrace();
-    }
-    return true;
-  }
+	public boolean start() {
 
-  public boolean stop()
-  {
-    try {
-      this.sched.shutdown();
-    } catch (SchedulerException e) {
-      this.logger.error("shutdown error", e);
-      return false;
-    }
-    return true;
-  }
+		Scheduler sched = null;
+		try {
+			//从工厂中获取实例
+			sched = StdSchedulerFactory.getDefaultScheduler();
+			//启动实例
+			sched.start();
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
+		
+		// define the job and tie it to our VolunteerJob class
+		JobDetail job = JobBuilder.newJob(VolunteerJob.class)
+				.withIdentity("job1", "group1").build();
+
+		// Trigger the job to run now, and then repeat every 40 seconds
+//		Trigger trigger = TriggerBuilder
+//				.newTrigger()
+//				.withIdentity("trigger1", "group1").startAt(triggerStartTime);
+//				.startNow()
+//				.withSchedule(
+//						SimpleScheduleBuilder.simpleSchedule()
+//								.withIntervalInSeconds(40).repeatForever())
+//				.build();
+//		try {
+//			sched.scheduleJob(job, trigger);
+//		} catch (SchedulerException e) {
+//			e.printStackTrace();
+//		}
+		return true;
+	}
+
+	public boolean stop() {
+		try {
+			this.sched.shutdown();
+		} catch (SchedulerException e) {
+			this.logger.error("shutdown error", e);
+			return false;
+		}
+		return true;
+	}
 }

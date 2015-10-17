@@ -166,7 +166,7 @@ public class VolunteerService {
 			messageBean.setMessage("数据库保存失败");
 
 		} else {
-			
+
 			messageBean.setFlag(true);
 
 			messageBean.setMessage(message);
@@ -175,4 +175,60 @@ public class VolunteerService {
 		return messageBean;
 
 	}
+
+	public MessageBean doAdminVolunteer(String para) {
+
+		MessageBean messageBean = new MessageBean();
+
+		int sucessCount = 0;
+
+		int failCount = 0;
+
+		String[] pairArray = para.split(";");
+		for (int i = 0; i < pairArray.length; i++) {
+			String pair = pairArray[i];
+			String[] elementArray = pair.split(",");
+			String s_id = elementArray[0];
+			String t_work_id = elementArray[1];
+			LogicTeacherStudent logicTeacherStudent = LogicTeacherStudent
+					.getLogicTeacherStudent(t_work_id, s_id);
+			if (logicTeacherStudent == null) {
+				logicTeacherStudent = new LogicTeacherStudent();
+			}
+
+			logicTeacherStudent.set("t_work_id", t_work_id);
+			logicTeacherStudent.set("s_id", s_id);
+
+			boolean flag = logicTeacherStudent.save();
+
+			if (flag) {
+				sucessCount++;
+			}
+		}
+
+		messageBean.setFlag(true);
+
+		failCount = pairArray.length - sucessCount;
+
+		String message = "成功选择:&nbsp;" + sucessCount + "&nbsp;个志愿";
+
+		if (failCount != 0) {
+			message += ";失败：" + failCount + "&nbsp;个";
+		}
+
+		if (failCount == pairArray.length) {
+
+			messageBean.setFlag(false);
+			messageBean.setMessage("数据库保存失败");
+
+		} else {
+
+			messageBean.setFlag(true);
+
+			messageBean.setMessage(message);
+		}
+
+		return messageBean;
+	}
+
 }

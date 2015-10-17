@@ -6,7 +6,6 @@ import java.util.Map;
 import com.model.InfoTeacherBasic;
 import com.model.LogicTeacherStudent;
 import com.service.TeacherBasicService;
-import com.service.VolunteerService;
 import com.system.CurrentExcuteVolunteer;
 import com.util.MessageBean;
 import com.util.QueryResult;
@@ -71,22 +70,18 @@ public class TeacherBaseController extends BaseController {
 	public void detail() {
 
 		String t_work_id = getPara("t_work_id");
+		
+		InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
+				.getTmsTeacher(t_work_id);
 
-		setAttr("t_work_id", t_work_id);
+		String t_file_path = infoTeacherBasic.get("t_file_path");
+
+		setAttr("t_file_path", t_file_path);
 
 		render("detail.jsp");
 
 	}
 
-	// public void doVolunteer() {
-	//
-	// String para = getPara("para");
-	//
-	// MessageBean messageBean = volunteerService.doStudentVolunteer(para);
-	//
-	// renderJson(messageBean);
-	//
-	// }
 
 	public void saveTeacherNumber() {
 

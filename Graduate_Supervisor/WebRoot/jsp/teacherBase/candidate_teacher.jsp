@@ -7,6 +7,11 @@
 <%@ include file="/jsp/common/taglibs.jsp"%>
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script language="javascript">
 
 var para = undefined;

@@ -3,40 +3,44 @@
 <html>
 <head>
 <title>基本信息列表</title>
-<%@ include file="/jsp/common/meta.jsp"%>
-<%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
-<%@ include file="/jsp/common/easyui.jsp"%>
-<script type="text/javascript" src="${ctx}/ShowPDF/Scripts/pdfobject.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
+		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/ShowPDF/Scripts/pdfobject.js"></script>
 <script type="text/javascript">
-  var filename = "";   
-		   /**
- * 页面加载初始化
- */
-jQuery(function() {
+  	var filename = "";   
+	/**
+	 * 页面加载初始化
+	 */
+	window.onload = function (){
 	var filename = '${t_file_path}';
-	if(filename !=  undefined && filename != ''){
-		document.getElementById( "pdf").style.display= "block" 
-		 var url= "${ctx}/word/" + filename;
+	
+	if(filename != undefined && filename != ''){
 		var success = new PDFObject({
-            url: "${ctx}/word/" + filename,
-            pdfOpenParams: {
-               scrollbars: 0,
-               toolbar: 0,
-               statusbar: 0
-               }
-        }).embed("pdf");
+	        url: "${pageContext.request.contextPath}/pdf/" + filename,
+	        
+	        pdfOpenParams: {
+	            scrollbars: '0',
+	            toolbar: '0',
+	            statusbar: '0'
+	        }
+	   	}).embed("pdf");
 	}else {
-		document.getElementById( "fff").style.display= "block"
+		$("#fff").show();
 	}
 	
+	 
 	
-}); 
+	
+}
  </script>  
 </head>
 <body>
 
-	<div id="pdf" style="display: none;" > <a href=""></a></div>
+	<div id="pdf"> <a href=""></a></div>
 	
 	<div id= "fff" style="display: none; text-align: center;">
 	

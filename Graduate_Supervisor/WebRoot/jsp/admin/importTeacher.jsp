@@ -11,8 +11,27 @@
 	.datagrid-cell-rownumber{
 		height: 26px;
 	}
+	
+	.textbox {
+		height: 20px;
+		margin: 0;
+		padding: 0 2px;
+		box-sizing: content-box;
+	}
 </style>
 <script language="javascript">
+
+$.extend($.fn.validatebox.defaults.rules, {
+           
+      number: {// 验证货币
+          validator: function (value) {
+               return /^[0-9]*$/i.test(value);
+          },
+          message: '请输入正确的数字'
+      },
+    
+     
+ });
 /*
  * 表格初始化
  */
@@ -48,7 +67,7 @@ function initBasicGrid() {
 		 
 		 {field:  'detail',title:'查看文档',width:getWidth(0.1),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' class='searchcls' style='color:blue;text-decoration:none' onclick='search("+index+")'></a>";  
+				 var detail = "<a href='#' class='searchcls' style='color:blue;text-decoration:none' onclick='searchPDF("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
@@ -176,11 +195,29 @@ function check(){
 
 function uploadPDF(){
 
-	var flag = check();
+	var succ = check();
 	
-	if(flag){
-		document.getElementById("uploadForm").submit();
-	}
+	if(succ){
+		var t_work_id = document.getElementById("f_t_work_id").value;
+		
+		var saveURL = "${ctx}/admin/setUploadWorkId?t_work_id="+t_work_id+"&date="
+					+ new Date() + "";
+		
+		jQuery.post(saveURL,function(jsonData) {
+			var flag = jsonData.flag;
+			var message = jsonData.message;
+			if (flag == true) {
+				
+				document.getElementById("uploadForm").submit();
+	
+			} else {
+				$.messager.alert('提示信息', '操作失败','error');
+			
+			}
+		}, "json");
+	} 
+	
+	
 }
 
 
@@ -188,6 +225,54 @@ function cancelUpload(){
 	$('#win').window('close');
 }
 
+function searchPDF(index){
+	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
+	var row = $('#basicGrid_div').datagrid('getSelected');
+	var t_work_id = row.t_work_id;
+	var t_name = row.t_name;
+	var menu_href = "${pageContext.request.contextPath}/teacherBase/detail?t_work_id="
+		+ t_work_id;
+	parent.addTabs(t_name+"pdf文档预览",menu_href);
+}
+
+function saveTeacher(){
+	$('#addTeacher').dialog('open');
+}
+
+function submitTeacherData(){
+
+	if($("#addTeacherForm").form('validate')){
+		var formData = jQuery("#addTeacherForm").serializeArray();
+	
+		var saveURL = "${ctx}/admin/saveTeacher?date="
+					+ new Date() + "";
+		
+		jQuery.post(saveURL,formData,function(jsonData) {
+			var flag = jsonData.flag;
+			
+			if (flag == true) {
+				$.messager.alert('提示信息','操作成功','info',function() {
+					
+					jQuery("#addTeacher").dialog("close");
+					jQuery("#basicGrid_div").datagrid("reload");
+				});
+	
+			} else {
+				var message = jsonData.message;
+				$.messager.alert('提示信息', '操作失败,原因为：' + message,'error',function(){
+					jQuery("#basicGrid_div").datagrid("reload");
+				});
+	
+			}
+		}, "json");
+	}
+
+	
+}
+
+public void saveTeacher(){
+	
+}
 
 </script>
 </head>
@@ -195,8 +280,8 @@ function cancelUpload(){
 
 	<div id="toobar"  style="padding-right: 5%;">
 		
-		<a href="#" class="easyui-linkbutton" iconCls="icon-export" plain="true" onclick="save();">导入教师信息</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="undo();">添加教师信息</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-export" plain="true" onclick="importTeacher();">导入教师信息</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="saveTeacher();">添加教师信息</a>
 		
 	</div>
 	
@@ -213,7 +298,7 @@ function cancelUpload(){
        <form id="uploadForm"
 			action="${ctx}/admin/uploadPDF"
 			name="uploadForm" method="post" enctype="multipart/form-data">
-			 <input type="hidden" name="t_work_id" id="f_t_work_id">
+			<input type="hidden" name="t_work_id" id="f_t_work_id">
         	 <input  id="pdf" name="pdf" class="easyui-filebox" data-options="buttonText:'选择pdf文件'"><br><br>
         	 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-upload" plain="false" onclick="uploadPDF();">确定</a>&nbsp;&nbsp;
         	 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" plain="false" onclick="cancelUpload();">取消</a>
@@ -231,15 +316,15 @@ function cancelUpload(){
 			<table style="padding-left: 50px;" cellpadding="5px;">
 				<tr>
 					<td>教职工号：</td>
-					<td><input class="easyui-textbox" name="infoTeacherBasic.t_work_id" id="t_work_id"></td>
+					<td><input class="easyui-validatebox textbox" name="infoTeacherBasic.t_work_id" id="t_work_id" data-options=" required:true,validType:'number',missingMessage:'教职工号不为空'"></td>
 				</tr>
 				<tr>
 					<td>姓名：</td>
-					<td><input class="easyui-textbox" name="infoTeacherBasic.t_name"></td>
+					<td><input class="easyui-validatebox textbox" name="infoTeacherBasic.t_name" data-options=" required:true,missingMessage:'姓名不为空'"></td>
 				</tr>
 				<tr>
 					<td>姓别：</td>
-					<td><input class="easyui-textbox" name="infoTeacherBasic.t_sex"></td>
+					<td><input class="easyui-validatebox textbox" name="infoTeacherBasic.t_sex" data-options=""></td>
 				</tr>
 			</table>
 			

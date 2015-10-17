@@ -7,6 +7,11 @@
 <%@ include file="/jsp/common/taglibs.jsp"%>
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script language="javascript">
 var para = undefined;
 
@@ -70,7 +75,7 @@ function initBasicGrid() {
 		 {field : 't_email',title : 'Email',width : getWidth(0.1),align : 'center'},
 		 {field:  'detail',title:'详细信息',width:getWidth(0.1),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue;text-decoration:none' onclick='detail("+index+")'>更多</a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='detail("+index+")'>更多</a>";  
 				 return detail; 
        		 } 
 		 },
@@ -81,6 +86,7 @@ function initBasicGrid() {
 		] ],
 
 		onLoadSuccess : function(data) {
+			$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
 			$(this).datagrid('doCellTip',{});
 
 		},

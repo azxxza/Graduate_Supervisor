@@ -7,6 +7,11 @@
 <%@ include file="/jsp/common/easyui.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script language="javascript">
 var para = undefined;
 var array = new Array();
@@ -76,13 +81,13 @@ function initBasicGrid() {
 	 	 {field : 's_id',title : '学号',width : getWidth(0.2),align : 'center'},
 	 	 {field : 's_name',title : '姓名',width : getWidth(0.2),align : 'center'},
 	 	 {field : 's_sex',title : '性别',width : getWidth(0.17),align : 'center'},
-	 	  {field : 'detail',title : '更多',width : getWidth(0.2),align : 'center',
+	 	 {field : 'detail',title : '详细信息',width : getWidth(0.2),align : 'center',
 	 	  	 formatter: function(value,row,index){
-				 var detail = "<a href='#' style='color:blue;text-decoration: none;' onclick='detail("+index+")'>更多</a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration: none;' onclick='detail("+index+")'>更多</a>";  
 				 return detail; 
        		 } 
 	 	  },
-	 	  {field : 'can_select_teacher',title : '可供选择的老师',width : getWidth(0.2),align : 'center',
+	 	 {field : 'can_select_teacher',title : '可供选择的老师',width : getWidth(0.2),align : 'center',
 	 	  
 	 	  	formatter : unitFormatter,
 	 	    
@@ -109,26 +114,17 @@ function initBasicGrid() {
 		] ],
 		
 		onLoadSuccess : function(data) {
-			$('.delcls').linkbutton({text : '删除学生',plain : true,iconCls : 'icon-trash'});
+			$('.detailcls').linkbutton({text : '智育成绩',plain : true,iconCls : 'icon-search'});
+			
 			
 
 		},
 
 		onLoadError : function() {
 			$.messager.alert('提示信息','数据加载失败','error');
-		},
+		}
 		
-		 onAfterEdit:function(index, row, changes){
-// 		 	var can_select_teacher = row.can_select_teacher;
-// 		 	if(can_select_teacher != undefined && can_select_teacher != ""){
-		 	
-// 		 		var par = row.s_id + "," + can_select_teacher;
-		 		
-// 		 		array.push(par);
-		 
-// 		 		para = array.join(";");
-// 		 	}
-		 }
+		
 		
 	});
 	
@@ -186,7 +182,7 @@ function sumbitData(){
 	var jsonPara = {"para" : para};
 	
 	if(para != undefined){
-		var  saveURL = "${ctx}/admin/saveTeachuploadWorderStudent?date="
+		var  saveURL = "${ctx}/admin/doAdminVolunteer?date="
 				+ new Date() + "";
 	
 		jQuery.post(saveURL,jsonPara,function(jsonData) {

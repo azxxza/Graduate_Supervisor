@@ -14,12 +14,16 @@ import com.model.InfoTeacherBasic;
 import com.model.LogicTeacherStudent;
 import com.model.SysOpenTime;
 import com.model.VolunteerTime;
+import com.service.VolunteerService;
 import com.util.ExcelExportUtil;
 import com.util.ItemBean;
 import com.util.MessageBean;
 import com.util.QueryResult;
 
 public class AdminController extends BaseController {
+
+	private VolunteerService volunteerService = new VolunteerService();
+
 	public void openTime() {
 
 		SysOpenTime sysTime = SysOpenTime.getSysTime(1);
@@ -154,8 +158,12 @@ public class AdminController extends BaseController {
 	}
 
 	public void importStudent() {
+		
 		render("importStudent.jsp");
 
+	}
+
+	public void uploadExcel() {
 		ServletContext context = JFinal.me().getServletContext();
 
 		String realpath = context.getRealPath("/Excel/12计算机1.xls");
@@ -221,24 +229,24 @@ public class AdminController extends BaseController {
 		renderNull();
 	}
 
-	public void uploadExcel() {
-		MessageBean messageBean = new MessageBean();
-
-		ServletContext context = JFinal.me().getServletContext();
-
-		String realpath = context.getRealPath("/excel/");
-		try {
-			getFile("excel", realpath, Integer.valueOf(209715200), "UTF-8");
-
-			messageBean.setFlag(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			messageBean.setFlag(false);
-			messageBean.setMessage("文件上传失败");
-		}
-
-		renderNull();
-	}
+//	public void uploadExcel() {
+//		MessageBean messageBean = new MessageBean();
+//
+//		ServletContext context = JFinal.me().getServletContext();
+//
+//		String realpath = context.getRealPath("/excel/");
+//		try {
+//			getFile("excel", realpath, Integer.valueOf(209715200), "UTF-8");
+//
+//			messageBean.setFlag(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			messageBean.setFlag(false);
+//			messageBean.setMessage("文件上传失败");
+//		}
+//
+//		renderNull();
+//	}
 
 	public void addOpenTime() {
 		MessageBean messageBean = new MessageBean();
@@ -302,41 +310,60 @@ public class AdminController extends BaseController {
 		renderJson(jsonMap);
 	}
 
-	public void uploadPDF() {
+	public void setUploadWorkId() {
+		String t_work_id = getPara("t_work_id");
 
-		String t_work_id = getSessionAttr("t_work_id");
+		setSessionAttr("f_t_work_id", t_work_id);
 
 		MessageBean messageBean = new MessageBean();
 
-		ServletContext context = JFinal.me().getServletContext();
+		messageBean.setFlag(true);
 
-		String realpath = context.getRealPath("/pdf/");
+		messageBean.setMessage("上传失败");
 
-		try {
+		renderJson(messageBean);
 
-			UploadFile uploadFile = getFile("pdf", realpath, 200 * 1024 * 1024,
-					"UTF-8");
+	}
 
-			InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
-					.getTmsTeacher(t_work_id);
+	public void uploadPDF() {
 
-			infoTeacherBasic.set("t_file_path", uploadFile.getFileName());
+		String t_work_id = getSessionAttr("f_t_work_id");
 
-			boolean flag = infoTeacherBasic.update();
+		if (t_work_id != null) {
+			MessageBean messageBean = new MessageBean();
 
-			messageBean.setFlag(flag);
+			ServletContext context = JFinal.me().getServletContext();
 
-			if (!flag) {
-				messageBean.setMessage("数据库数据更新失败");
+			String realpath = context.getRealPath("/pdf/");
+
+			try {
+
+				UploadFile uploadFile = getFile("pdf", realpath,
+						200 * 1024 * 1024, "UTF-8");
+
+				InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
+						.getTmsTeacher(t_work_id);
+
+				infoTeacherBasic.set("t_file_path", uploadFile.getFileName());
+
+				boolean flag = infoTeacherBasic.update();
+
+				messageBean.setFlag(flag);
+
+				if (!flag) {
+					messageBean.setMessage("数据库数据更新失败");
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				messageBean.setFlag(false);
+				messageBean.setMessage("PDF文档上传失败");
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			messageBean.setFlag(false);
-			messageBean.setMessage("PDF文档上传失败");
 		}
 
 		render("importTeacher.jsp");
+
 	}
 
 	public void getTeacherJson() {
@@ -370,7 +397,26 @@ public class AdminController extends BaseController {
 
 	}
 
-	public void deleteTeacher() {
+	public void doAdminVolunteer() {
 
+		String para = getPara("para");
+
+		MessageBean messageBean = volunteerService.doAdminVolunteer(para);
+
+		renderJson(messageBean);
+	}
+
+	public void saveTeacher() {
+		MessageBean messageBean = new MessageBean();
+		InfoTeacherBasic infoTeacherBasic = getModel(InfoTeacherBasic.class,
+				"infoTeacherBasic");
+		boolean flag = infoTeacherBasic.save();
+		if (flag) {
+			messageBean.setFlag(true);
+		} else {
+			messageBean.setMessage("数据库保存失败");
+		}
+
+		renderJson(messageBean);
 	}
 }

@@ -17,9 +17,10 @@ jQuery(function() {
 	var filename = '${t_file_path}';
 	if(filename !=  undefined && filename != ''){
 		document.getElementById( "pdf").style.display= "block" 
-		 var url= "${ctx}/word/" + filename;
+		 var url= "${ctx}/pdf/" + filename;
+		
 		var success = new PDFObject({
-            url: "${ctx}/word/" + filename,
+            url: "${ctx}/pdf/" + filename,
             pdfOpenParams: {
                scrollbars: 0,
                toolbar: 0,

@@ -12,9 +12,9 @@ public class SysOpenTime extends Model<SysOpenTime> {
 	private static final long serialVersionUID = 1L;
 	public static final SysOpenTime dao = new SysOpenTime();
 
-	public static SysOpenTime getSysTime(int t_round) {
+	public static SysOpenTime getSysTime(int r_t_round) {
 		String sql = "select * from sys_round_open_time where r_t_round = "
-				+ t_round;
+				+ r_t_round;
 		return dao.findFirst(sql);
 
 	}

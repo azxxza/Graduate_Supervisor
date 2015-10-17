@@ -25,16 +25,28 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
 
+		List<InfoStudentBasic> list = null;
+
 		String sql = "from info_student_basic";
+
+		long count = 0;
+
 		try {
-			Page<InfoStudentBasic> pageList = dao.paginate(page.intValue(),
-					rows.intValue(), "Select * ", sql);
 
-			List<InfoStudentBasic> list = pageList.getList();
+			if (page == 0 && rows == 0) {
+				list = dao.find("select * " + sql);
 
-			long count = Db.queryLong("select count(1) " + sql).longValue();
+			} else {
+				Page<InfoStudentBasic> pageList = dao.paginate(page.intValue(),
+						rows.intValue(), "Select * ", sql);
+
+				list = pageList.getList();
+
+				count = Db.queryLong("select count(1) " + sql).longValue();
+			}
 
 			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

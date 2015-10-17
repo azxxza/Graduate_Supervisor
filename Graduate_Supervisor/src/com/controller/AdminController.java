@@ -7,15 +7,14 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
-import com.common.XlsMain;
 import com.jfinal.core.JFinal;
 import com.jfinal.upload.UploadFile;
 import com.model.InfoTeacherBasic;
-import com.model.LogicTeacherStudent;
 import com.model.SysOpenTime;
 import com.model.VolunteerTime;
 import com.service.VolunteerService;
 import com.util.ExcelExportUtil;
+import com.util.ExcelImportUtil;
 import com.util.ItemBean;
 import com.util.MessageBean;
 import com.util.QueryResult;
@@ -87,6 +86,8 @@ public class AdminController extends BaseController {
 
 		String para = getPara("para");
 
+		System.out.println(para);
+
 		if ((para != null) && (!para.equals(""))) {
 			String[] pairArray = para.split(";");
 
@@ -98,7 +99,7 @@ public class AdminController extends BaseController {
 				String r_t_end_time = elementArray[2];
 
 				SysOpenTime sysOpenTime = (SysOpenTime) SysOpenTime.dao
-						.findById(Integer.valueOf(Integer.parseInt(r_t_id)));
+						.findById(r_t_id);
 
 				sysOpenTime.set("r_t_start_time", r_t_start_time);
 				sysOpenTime.set("r_t_end_time", r_t_end_time);
@@ -158,60 +159,70 @@ public class AdminController extends BaseController {
 	}
 
 	public void importStudent() {
-		
+
 		render("importStudent.jsp");
 
 	}
 
-	public void uploadExcel() {
+	public void uploadBasicExcel() {
+
 		ServletContext context = JFinal.me().getServletContext();
 
-		String realpath = context.getRealPath("/Excel/12计算机1.xls");
+		String realpath = context.getRealPath("/excel/");
 
-		boolean flag = new XlsMain().parseExcel(realpath);
+		try {
 
-		MessageBean messageBean = new MessageBean();
+			UploadFile uploadFile = getFile("excelBasic", realpath,
+					200 * 1024 * 1024, "UTF-8");
 
-		messageBean.setFlag(true);
+			System.out.println(uploadFile);
 
-		if (!flag) {
-			messageBean.setMessage("操作失败");
+			ExcelImportUtil importUtil = new ExcelImportUtil();
+
+			String path = realpath + "/" + uploadFile.getFileName();
+
+			importUtil.importBasic(path);
+
+			uploadFile.getFile().delete();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
 		}
 
-		renderJson(messageBean);
+		render("importStudent.jsp");
+
+	}
+
+	public void uploadScoreExcel() {
+
+		ServletContext context = JFinal.me().getServletContext();
+
+		String realpath = context.getRealPath("/excel/");
+
+		try {
+
+			UploadFile uploadFile = getFile("excelScore", realpath,
+					200 * 1024 * 1024, "UTF-8");
+
+			ExcelImportUtil importUtil = new ExcelImportUtil();
+
+			String path = realpath + "/" + uploadFile.getFileName();
+
+			importUtil.importScoreExcel(path);
+
+			uploadFile.getFile().delete();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
+		render("importStudent.jsp");
 	}
 
 	public void importTeacher() {
 		render("importTeacher.jsp");
-	}
-
-	public void saveTeacherStudent() {
-		MessageBean messageBean = new MessageBean();
-		String para = getPara("para");
-		if ((para != null) && (!para.equals(""))) {
-			String[] pairArray = para.split(";");
-			for (int i = 0; i < pairArray.length; i++) {
-				String pair = pairArray[i];
-				String[] elementArray = pair.split(",");
-				String s_id = elementArray[0];
-				String t_work_id = elementArray[1];
-				LogicTeacherStudent logicTeacherStudent = LogicTeacherStudent
-						.getLogicTeacherStudent(t_work_id, s_id);
-				if (logicTeacherStudent == null) {
-					logicTeacherStudent = new LogicTeacherStudent();
-				}
-
-				logicTeacherStudent.set("t_work_id", t_work_id);
-				logicTeacherStudent.set("s_id", s_id);
-
-				boolean flag = logicTeacherStudent.save();
-
-				messageBean.setFlag(flag);
-			}
-
-		}
-
-		renderJson(messageBean);
 	}
 
 	public void exportAll() {
@@ -228,25 +239,6 @@ public class AdminController extends BaseController {
 
 		renderNull();
 	}
-
-//	public void uploadExcel() {
-//		MessageBean messageBean = new MessageBean();
-//
-//		ServletContext context = JFinal.me().getServletContext();
-//
-//		String realpath = context.getRealPath("/excel/");
-//		try {
-//			getFile("excel", realpath, Integer.valueOf(209715200), "UTF-8");
-//
-//			messageBean.setFlag(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			messageBean.setFlag(false);
-//			messageBean.setMessage("文件上传失败");
-//		}
-//
-//		renderNull();
-//	}
 
 	public void addOpenTime() {
 		MessageBean messageBean = new MessageBean();
@@ -419,4 +411,34 @@ public class AdminController extends BaseController {
 
 		renderJson(messageBean);
 	}
+
+	public void deleteOpenTime() {
+
+		int id = getParaToInt("id");
+
+		SysOpenTime sysOpenTime = SysOpenTime.dao.findById(id);
+
+		List<VolunteerTime> list = VolunteerTime
+				.getVolunteerTimeByRound(sysOpenTime.getInt("r_t_round"));
+
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).delete();
+			}
+		}
+
+		boolean flag = sysOpenTime.delete();
+
+		MessageBean messageBean = new MessageBean();
+
+		messageBean.setFlag(flag);
+
+		if (!flag) {
+			messageBean.setMessage("数据库删除失败");
+		}
+
+		renderJson(messageBean);
+
+	}
+
 }

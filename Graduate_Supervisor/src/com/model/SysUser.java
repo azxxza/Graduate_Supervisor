@@ -1,7 +1,5 @@
 package com.model;
 
-import java.util.List;
-
 import com.jfinal.plugin.activerecord.Model;
 
 @SuppressWarnings("serial")

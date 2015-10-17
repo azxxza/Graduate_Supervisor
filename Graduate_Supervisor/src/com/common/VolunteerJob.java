@@ -1,12 +1,8 @@
 package com.common;
 
-import java.util.Date;
-
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.JobKey;
-import org.quartz.SchedulerException;
 
 import com.system.CurrentExcuteVolunteer;
 

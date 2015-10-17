@@ -85,7 +85,6 @@ function detail(index) {
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var s_id = row.s_id;
-	alert(s_id);
 	var menu_href = "${pageContext.request.contextPath}/studentBase/detail?s_id="
 		+ s_id;
 	parent.addTabs("详细信息",menu_href);

@@ -193,6 +193,7 @@ function check(){
 	return true;
 }
 
+
 function uploadPDF(){
 
 	var succ = check();
@@ -270,7 +271,7 @@ function submitTeacherData(){
 	
 }
 
-public void saveTeacher(){
+function saveTeacher(){
 	
 }
 

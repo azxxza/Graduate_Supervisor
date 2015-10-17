@@ -12,7 +12,7 @@ public class SysYearTerm extends Model<SysYearTerm> {
 	public final static SysYearTerm dao = new SysYearTerm();
 
 	public static QueryResult<SysYearTerm> getYearTermResult(int page, int rows) {
-		String sql = "from s_year_term";
+		String sql = "from sys_year_term";
 
 		List<SysYearTerm> list = null;
 		try {
@@ -37,7 +37,7 @@ public class SysYearTerm extends Model<SysYearTerm> {
 	}
 
 	public static SysYearTerm getSysYearTermByYearAndTerm(String year, String term) {
-		String sql = "select * from s_year_term where year = '" + year.trim()
+		String sql = "select * from sys_year_term where year = '" + year.trim()
 				+ "' and term = '" + term.trim() + "'";
 		List<SysYearTerm> list = SysYearTerm.dao.find(sql);
 

@@ -63,7 +63,7 @@ function initBasicGrid() {
 		url : '${ctx}/admin/getOpenTimeList?Date='
 				+ new Date() + '',
 		 columns : [ [
-		 {field : 'r_t_id',hidden:true},
+		 {field : 'id',hidden:true},
 	 	 {field : 'r_t_round',title : '第几轮',width : getWidth(0.2),align : 'center',
 	 		 formatter : function(value, row, index) {
 	 			
@@ -133,15 +133,22 @@ function submitData() {
 
 	saveData();
 	
+	var length = jQuery("#basicGrid_div").datagrid('getChanges').length;
+	
+	if(length == 0){
+		$.messager.alert('提示信息', '没有可以提交的数据','warning');
+		return;
+	}
+	
 	var data = jQuery("#basicGrid_div").datagrid("getData");
 	
 	var rows = data.rows;
 	
 	for(var i = 0;i<rows.length;i++){
-		var r_t_id =  rows[i].r_t_id;
+		var id =  rows[i].id;
 		var r_t_start_time = rows[i].r_t_start_time;
 		var r_t_end_time = rows[i].r_t_end_time;
-		var par =  r_t_id + "," + r_t_start_time + "," + r_t_end_time;
+		var par =  id + "," + r_t_start_time + "," + r_t_end_time;
 		array.push(par);
 		
 	}
@@ -250,25 +257,27 @@ function reloadData(){
 function confirmDel(index){
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
-	var r_t_id = row.r_t_id;
+	var id = row.id;
 
 	$.messager.confirm('确认对话框', '您想要删除吗？', function(yes) {
 		if (yes) {
 
-			delOpenTime(r_t_id);
+			delOpenTime(id);
 		}
 	});
 }
 
-function delOpenTime(r_t_id){
-	var delURL = "${ctx}/admin/deleteOpenTime?r_t_id="
-			+ r_t_id + "&date=" + new Date() + "";
+function delOpenTime(id){
+	var delURL = "${ctx}/admin/deleteOpenTime?id="
+			+ id + "&date=" + new Date() + "";
 	jQuery.get(delURL, function(jsonData) {
 		var flag = jsonData.flag;
 		
 		if (flag == true) {
-			$.messager.alert('我的消息','删除成功','info');	
-			jQuery('#basicGrid_div').datagrid("reload");
+			$.messager.alert('我的消息','删除成功','info',function(){
+				jQuery('#basicGrid_div').datagrid("reload");
+			});	
+			
 
 		} else {
 			var message = jsonData.message;

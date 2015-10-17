@@ -26,13 +26,13 @@ import com.model.LogicStudentVolunteer;
 import com.model.LogicTeacherStudent;
 import com.model.SysOpenTime;
 import com.model.SysUser;
+import com.model.SysYearTerm;
 import com.model.VolunteerTime;
 
 public class CommonConfig extends JFinalConfig {
-	
 
 	public void configConstant(Constants me) {
-		
+
 		PropKit.use("a_little_config.txt");
 
 		me.setDevMode(true);
@@ -57,7 +57,7 @@ public class CommonConfig extends JFinalConfig {
 		me.add("/", SystemController.class, "system");
 
 		me.add("/login", LoginController.class, "/system");
-		
+
 		me.add("/user", UserController.class);
 	}
 
@@ -87,9 +87,13 @@ public class CommonConfig extends JFinalConfig {
 
 		arp.addMapping("sys_volunteer_open_time", "id", VolunteerTime.class);
 
-//		 QuartzPlugin plugin = new QuartzPlugin();
-//		
-//		 me.add(plugin);
+		arp.addMapping("info_student_score", "id", InfoStudentScore.class);
+
+		arp.addMapping("sys_year_term", "id", SysYearTerm.class);
+
+		// QuartzPlugin plugin = new QuartzPlugin();
+		//
+		// me.add(plugin);
 	}
 
 	public static void main(String[] args) {

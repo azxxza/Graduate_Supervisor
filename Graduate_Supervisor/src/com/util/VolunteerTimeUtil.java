@@ -5,12 +5,12 @@ import java.util.Date;
 import com.model.SysOpenTime;
 
 public class VolunteerTimeUtil {
-	
+
 	private static VolunteerTimeUtil volunteerTime;
 	private Date date;
 
 	private VolunteerTimeUtil(int t_round) {
-		
+
 		SysOpenTime sysOpenTime = SysOpenTime.getSysTime(t_round);
 
 		Date r_t_end_time = sysOpenTime.getDate("r_t_start_time");
@@ -18,13 +18,13 @@ public class VolunteerTimeUtil {
 		this.date = r_t_end_time;
 	}
 
-//	public static VolunteerTimeUtil getVolunteerTime() {
-//		if (volunteerTime == null) {
-//			volunteerTime = new VolunteerTimeUtil();
-//		}
-//
-//		return volunteerTime;
-//	}
+	public static VolunteerTimeUtil getVolunteerTime() {
+		if (volunteerTime == null) {
+			volunteerTime = new VolunteerTimeUtil(1);
+		}
+
+		return volunteerTime;
+	}
 
 	public Date getDate() {
 		return this.date;

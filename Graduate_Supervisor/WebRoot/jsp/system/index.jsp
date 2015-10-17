@@ -17,6 +17,7 @@
 	}
 </style>
 <script type="text/javascript">
+
 	$(function() {
 		for (var i = 1; i <= 8; i++) {
 			$('#ttt_' + i).tree({
@@ -31,6 +32,8 @@
 				}
 			});
 		}
+		
+		
 	});
 	
 	/*

@@ -19,26 +19,38 @@ var array = new Array();
 
 var editIndex = undefined;
 function endEditing(){
-	if (editIndex == undefined){return true}
-	if ($('#basicGrid_div').datagrid('validateRow', editIndex)){
-		$('#basicGrid_div').datagrid('endEdit', editIndex);
-		editIndex = undefined;
-		return true;
-	} else {
-		return false;
+
+	var rows = $('#basicGrid_div').datagrid('getRows');
+	for(var i = 0; i < rows.length; i++){
+		$('#basicGrid_div').datagrid('endEdit',i);
 	}
+	
+	$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
+	
+	return true;
+	
+// 	if (editIndex == undefined){return true}
+// 	if ($('#basicGrid_div').datagrid('validateRow', editIndex)){
+// 		$('#basicGrid_div').datagrid('endEdit', editIndex);
+// 		editIndex = undefined;
+// 		$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
+// 		return true;
+// 	} else {
+// 		return false;
+// 	}
+	
+	
 }
 function onClickCell(index, field){
 	
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
-	var s_t_volunteer = row.s_t_volunteer;
-	if(s_t_volunteer == undefined || s_t_volunteer == ''){
-		if (endEditing()){
+	
+	if (endEditing()){
 		$('#basicGrid_div').datagrid('selectRow', index)
 				.datagrid('editCell', {index:index,field:field});
 		editIndex = index;
-	}
+	
 	}
 	
 }
@@ -60,6 +72,7 @@ function initBasicGrid() {
 		striped:true,
 		onClickCell: onClickCell,
 		sortName: 's_t_volunteer',
+		rownumbers:true,
 		remoteSort:true,
 		url : '${pageContext.request.contextPath}/teacherBase/getTeacherBaseList?Date='
 				+ new Date() + '',
@@ -80,7 +93,7 @@ function initBasicGrid() {
        		 } 
 		 },
 		 
-		 {field : 't_number',title : '名额(单击单元格可分配名额)',width : getWidth(0.2),align : 'center',editor:{type:'numberbox'}},
+		 {field : 't_number',title : '名额(单击单元格可分配名额)',width : getWidth(0.17),align : 'center',editor:{type:'numberbox'}},
 		 {field : 't_number_copy',hidden:true},
 
 		] ],
@@ -107,8 +120,6 @@ jQuery(function() {
 
 	initBasicGrid();
 	
-	initWin();
-	
 });
 
 
@@ -127,11 +138,10 @@ function detail(index) {
 function submitData(){
 
 	saveData();
-	
+
 	var data = jQuery("#basicGrid_div").datagrid("getData");
 	
 	var rows = data.rows;
-	
 	
 	for(var i = 0;i<rows.length;i++){
 		
@@ -197,6 +207,7 @@ function undo(){
 }
 
 function saveData(){
+	endEditing();
 	jQuery("#basicGrid_div").datagrid('acceptChanges');
 }
 

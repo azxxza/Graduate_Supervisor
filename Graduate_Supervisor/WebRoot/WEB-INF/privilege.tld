@@ -11,7 +11,7 @@
 		<!--指定标签名 -->
 		<name>show</name>
 		<!-- 指定标签类文件的全路径 -->
-		<tag-class>com.util.PrivilegeTag</tag-class>
+		<tag-class>com.authority.PrivilegeTag</tag-class>
 		<!--如果不需要标签体则设置empty，反之设定jsp -->
 		<body-content>JSP</body-content>
 		<description>权限校验标签，有权限就显示标签体的内容，否则不显示</description>

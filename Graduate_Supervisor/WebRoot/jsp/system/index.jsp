@@ -174,12 +174,12 @@
   <privilege:show powerName="menu_admin">
 				<div  data-options="iconCls:'icon-edit'" title="系统参数设置">
 					<ul id="ttt_1">
-						<li data-options="iconCls:'icon-add',url:'${ctx}/admin/allocNumberList'" >
+						<li data-options="iconCls:'icon-add',url:'${ctx}/teacherBase/allocNumber'" >
 							<span>
 								教师名额分配
 							</span>
 						</li>
-						<li data-options="iconCls:'icon-time',url:'${ctx}/admin/openTimeList'"><span>开放时间</span></li>
+						<li data-options="iconCls:'icon-time',url:'${ctx}/admin/setOpenTime'"><span>开放时间</span></li>
 					</ul>
 				</div>
 			
@@ -187,15 +187,15 @@
 			<div title="用户管理" data-options="iconCls:'icon-user'">
 				<ul id="ttt_2">
 					
-					<li data-options="iconCls:'icon-user',url:'${ctx}/admin/importStudent'"><span>学生信息管理</span></li>
-					<li data-options="iconCls:'icon-user',url:'${ctx}/admin/importTeacher'"><span>教师信息管理</span></li>
+					<li data-options="iconCls:'icon-user',url:'${ctx}/studentBase/studentManage'"><span>学生信息管理</span></li>
+					<li data-options="iconCls:'icon-user',url:'${ctx}/teacherBase/teacherManage'"><span>教师信息管理</span></li>
 				</ul>
 			</div>
 			
 			<div title="双选结果" data-options="iconCls:'icon-search'">
 				<ul id="ttt_3">
-					<li data-options="iconCls:'icon-ok',url:'${ctx}/admin/teacherProcessList'">查看双选结果</span></li>
-					<li data-options="iconCls:'icon-ok',url:'${ctx}/admin/studentProcessList'"><span>学生分配</span></li>
+					<li data-options="iconCls:'icon-ok',url:'${ctx}/teacherBase/choiseResult'">查看双选结果</span></li>
+					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/allocStudent'"><span>学生分配</span></li>
 				</ul>
 			</div>
 			
@@ -205,15 +205,15 @@
 			<privilege:show powerName="menu_teacher">
 				<div title="师生互选" data-options="iconCls:'icon-reload'">
 				<ul id="ttt_4">
-					<li data-options="iconCls:'icon-table-refresh',url:'${ctx}/studentBase/candidate_student'"><span>预览所有学生</span></li>
-					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/can_select_student'"><span>当前志愿可录取学生列表</span></li>
+					<li data-options="iconCls:'icon-table-refresh',url:'${ctx}/studentBase/candidateStudent'"><span>预览所有学生</span></li>
+					<li data-options="iconCls:'icon-edit',url:'${ctx}/studentBase/canSelectStudent'"><span>当前志愿可录取学生列表</span></li>
 				</ul>
 				
 				</div>
 				
 				<div title="选择结果" data-options="iconCls:'icon-ok'">
 				<ul id="ttt_5">
-					<li data-options="iconCls:'icon-ok',url:'${ctx}/studentBase/selected_student'"><span>已选择学生列表</span></li>
+					<li data-options="iconCls:'icon-ok',url:'${ctx}/studentBase/selectedStudent'"><span>已选择学生列表</span></li>
 				</ul>
 				</div>
 			</privilege:show>
@@ -222,7 +222,7 @@
 				
 			<div title="师生互选" data-options="iconCls:'icon-reload'">
 				<ul id="ttt_6">
-					<li data-options="iconCls:'icon-ok',url:'${ctx}/teacherBase/candidateTeacherList'"><span>选择教师</span></li>
+					<li data-options="iconCls:'icon-ok',url:'${ctx}/teacherBase/candidateTeacher'"><span>选择教师</span></li>
 				</ul>
 			</div>
 				

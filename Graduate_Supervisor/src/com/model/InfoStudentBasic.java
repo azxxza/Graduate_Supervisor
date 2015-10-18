@@ -2,10 +2,11 @@ package com.model;
 
 import java.util.List;
 
+import com.bean.QueryResultBean;
+import com.common.TableCommom;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Page;
-import com.util.QueryResult;
 
 public class InfoStudentBasic extends Model<InfoStudentBasic> {
 	/**
@@ -13,6 +14,9 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 	 */
 	private static final long serialVersionUID = 1L;
 	public static final InfoStudentBasic dao = new InfoStudentBasic();
+	private static final String INFO_STUDENT_BASIC = TableCommom.INFO_STUDENT_BASIC;
+	private static final String LOGIC_DO_VOLUNTEER = TableCommom.LOGIC_DO_VOLUNTEER;
+	private static final String LOGIC_VOLUNTEER_RESULT = TableCommom.LOGIC_VOLUNTEER_RESULT;
 
 	public static InfoStudentBasic getStudent(String s_id) {
 
@@ -20,106 +24,86 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 	}
 
-	public static QueryResult<InfoStudentBasic> getStudentResult(Integer page,
-			Integer rows) {
+	public static QueryResultBean<InfoStudentBasic> getStudentResult(int page,
+			int rows) {
 
-		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+		QueryResultBean<InfoStudentBasic> queryResult = new QueryResultBean<InfoStudentBasic>();
 
-		List<InfoStudentBasic> list = null;
+		String sql = "from " + INFO_STUDENT_BASIC;
 
-		String sql = "from info_student_basic";
+		Page<InfoStudentBasic> pageList = dao.paginate(page, rows, "Select * ",
+				sql);
 
-		long count = 0;
+		List<InfoStudentBasic> list = pageList.getList();
 
-		try {
+		long count = Db.queryLong("select count(1)  " + sql);
 
-			if (page == 0 && rows == 0) {
-				list = dao.find("select * " + sql);
+		queryResult = new QueryResultBean<InfoStudentBasic>(count, list);
 
-			} else {
-				Page<InfoStudentBasic> pageList = dao.paginate(page.intValue(),
-						rows.intValue(), "Select * ", sql);
-
-				list = pageList.getList();
-
-				count = Db.queryLong("select count(1) " + sql).longValue();
-			}
-
-			queryResult = new QueryResult<InfoStudentBasic>(count, list);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return queryResult;
+
 	}
 
-	public static QueryResult<InfoStudentBasic> getStudentResultWithVolunteerByWorkId(
+	public static QueryResultBean<InfoStudentBasic> getStudentResultWithVolunteerByWorkId(
 			int page, int rows, String t_work_id) {
 
-		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+		QueryResultBean<InfoStudentBasic> queryResult = new QueryResultBean<InfoStudentBasic>();
 
-		String sql = "from info_student_basic i ,logic_student_volunteer l where  l.t_work_id = "
-				+ t_work_id + " and i.s_id = l.s_id";
-		try {
-			Page<InfoStudentBasic> pageList = dao.paginate(page, rows,
-					"Select * ", sql);
+		String sql = "from " + INFO_STUDENT_BASIC + " i ," + LOGIC_DO_VOLUNTEER
+				+ " l where  l.t_work_id = " + t_work_id
+				+ " and i.s_id = l.s_id";
 
-			List<InfoStudentBasic> list = pageList.getList();
+		Page<InfoStudentBasic> pageList = dao.paginate(page, rows, "Select * ",
+				sql);
 
-			long count = Db.queryLong("select count(1) " + sql).longValue();
+		List<InfoStudentBasic> list = pageList.getList();
 
-			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+		long count = Db.queryLong("select count(1) " + sql).longValue();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		queryResult = new QueryResultBean<InfoStudentBasic>(count, list);
+
 		return queryResult;
 	}
 
-	public static QueryResult<InfoStudentBasic> getStudentResultWithSelectedByWorkId(
+	public static QueryResultBean<InfoStudentBasic> getStudentResultWithSelectedByWorkId(
 			int page, int rows, String t_work_id) {
 
-		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+		QueryResultBean<InfoStudentBasic> queryResult = new QueryResultBean<InfoStudentBasic>();
 
-		String sql = "from info_student_basic i ,logic_teacher_student l where  l.t_work_id = "
+		String sql = "from " + INFO_STUDENT_BASIC + " i ,"
+				+ LOGIC_VOLUNTEER_RESULT + " l where l.t_work_id = "
 				+ t_work_id + " and i.s_id = l.s_id";
 
-		System.out.println(sql);
-		try {
-			Page<InfoStudentBasic> pageList = dao.paginate(page, rows,
-					"Select * ", sql);
+		Page<InfoStudentBasic> pageList = dao.paginate(page, rows, "Select * ",
+				sql);
 
-			List<InfoStudentBasic> list = pageList.getList();
+		List<InfoStudentBasic> list = pageList.getList();
 
-			long count = Db.queryLong("select count(1) " + sql).longValue();
+		long count = Db.queryLong("select count(1) " + sql);
 
-			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+		queryResult = new QueryResultBean<InfoStudentBasic>(count, list);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return queryResult;
 	}
 
-	public static QueryResult<InfoStudentBasic> getNotSelectedStudentResult(
+	public static QueryResultBean<InfoStudentBasic> getNotSelectedStudentResult(
 			int page, int rows) {
 
-		QueryResult<InfoStudentBasic> queryResult = new QueryResult<InfoStudentBasic>();
+		QueryResultBean<InfoStudentBasic> queryResult = new QueryResultBean<InfoStudentBasic>();
 
-		String sql = " from info_student_basic i where s_id not in (select s_id from logic_teacher_student)";
-		try {
-			Page<InfoStudentBasic> pageList = dao.paginate(page, rows,
-					"Select * ", sql);
+		String sql = " from " + INFO_STUDENT_BASIC
+				+ " i where s_id not in (select s_id from "
+				+ LOGIC_VOLUNTEER_RESULT + ")";
 
-			List<InfoStudentBasic> list = pageList.getList();
+		Page<InfoStudentBasic> pageList = dao.paginate(page, rows, "Select * ",
+				sql);
 
-			long count = Db.queryLong("select count(1) " + sql).longValue();
+		List<InfoStudentBasic> list = pageList.getList();
 
-			queryResult = new QueryResult<InfoStudentBasic>(count, list);
+		long count = Db.queryLong("select count(1) " + sql).longValue();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		queryResult = new QueryResultBean<InfoStudentBasic>(count, list);
+
 		return queryResult;
 	}
 }

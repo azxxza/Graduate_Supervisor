@@ -17,8 +17,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 
+import com.bean.QueryResultBean;
 import com.jfinal.plugin.activerecord.Model;
+import com.model.InfoStudentBasic;
 import com.model.InfoTeacherBasic;
+import com.service.TeacherBasicService;
 
 public class ExcelExportUtil {
 
@@ -57,68 +60,62 @@ public class ExcelExportUtil {
 		cell.setCellValue("性别");
 
 		cell = row.createCell(2);
-		cell.setCellValue("职称/职务");
+		cell.setCellValue("名额总数(个)");
 
 		cell = row.createCell(3);
-		cell.setCellValue("最高学历");
-
-		cell = row.createCell(4);
-		cell.setCellValue("毕业院校");
-
-		cell = row.createCell(5);
-		cell.setCellValue("联系电话");
-
-		cell = row.createCell(6);
-		cell.setCellValue("Email");
-
-		cell = row.createCell(7);
 		cell.setCellValue("剩余名额(个)");
 
+		cell = row.createCell(4);
+		cell.setCellValue("学生列表");
+
 		for (int i = 0; i < list.size(); i++) {
-			InfoTeacherBasic infoTeacherBasic = (InfoTeacherBasic) list.get(i);
+
+			InfoTeacherBasic infoTeacherBasic = list.get(i);
+
+			String t_work_id = infoTeacherBasic.getStr("t_work_id");
 
 			row = sheet.createRow(i + 1);
+
 			row.setHeight((short) 450);
 
 			cell = row.createCell(0);
+			String t_name = infoTeacherBasic.getStr("t_name");
+			if (t_name != null) {
+				cell.setCellValue(t_name);
+			}
 
-			if (infoTeacherBasic.get("t_name") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_name").toString());
-			}
 			cell = row.createCell(1);
-			if (infoTeacherBasic.get("t_sex") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_sex").toString());
+			String t_sex = infoTeacherBasic.getStr("t_sex");
+			if (t_sex != null) {
+				cell.setCellValue(t_sex);
 			}
+
 			cell = row.createCell(2);
-			if (infoTeacherBasic.get("t_occupation") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_occupation")
-						.toString());
-			}
+			int t_number = infoTeacherBasic.getInt("t_number");
+			cell.setCellValue(t_number);
+
 			cell = row.createCell(3);
-			if (infoTeacherBasic.get("t_hightest_background") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_hightest_background")
-						.toString());
-			}
+			int rest_number = TeacherBasicService
+					.getTeacherRestNumberByWorkId(t_work_id);
+			cell.setCellValue(rest_number);
 
 			cell = row.createCell(4);
-			if (infoTeacherBasic.get("t_hightest_degree") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_hightest_degree")
-						.toString());
-			}
+			QueryResultBean<InfoStudentBasic> queryResult = InfoStudentBasic
+					.getStudentResultWithSelectedByWorkId(0, 0, t_work_id);
+			List<InfoStudentBasic> studentBasicList = queryResult.getList();
+			String s_name_list = "";
+			if (studentBasicList != null) {
+				for (int j = 0; j < studentBasicList.size(); j++) {
+					String s_name = studentBasicList.get(j).getStr("s_name");
+					if (j == studentBasicList.size() - 1) {
+						s_name_list += s_name;
+					} else {
+						s_name_list += s_name + ",";
+					}
 
-			cell = row.createCell(5);
-			if (infoTeacherBasic.get("t_gradute_school") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_gradute_school")
-						.toString());
+				}
 			}
-			cell = row.createCell(6);
-			if (infoTeacherBasic.get("t_tel") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_tel").toString());
-			}
-			cell = row.createCell(7);
-			if (infoTeacherBasic.get("t_email") != null) {
-				cell.setCellValue(infoTeacherBasic.get("t_email").toString());
-			}
+			cell.setCellValue(s_name_list);
 
 		}
 

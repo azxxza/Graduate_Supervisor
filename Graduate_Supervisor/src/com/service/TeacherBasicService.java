@@ -1,9 +1,30 @@
 package com.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bean.MessageBean;
+import com.bean.QueryResultBean;
 import com.model.InfoTeacherBasic;
-import com.util.MessageBean;
+import com.model.LogicVolunteerResult;
 
 public class TeacherBasicService {
+
+	/*
+	 * 添加属性
+	 */
+	private static void addProperties(InfoTeacherBasic infoTeacherBasic) {
+
+		String t_work_id = infoTeacherBasic.getStr("t_work_id");
+
+		int rest_number = getTeacherRestNumberByWorkId(t_work_id);
+
+		infoTeacherBasic.put("rest_number", rest_number);
+
+		infoTeacherBasic.put("t_number_copy",
+				infoTeacherBasic.getInt("t_number"));
+
+	}
 
 	public MessageBean saveTeacherNumber(String para) {
 
@@ -43,6 +64,86 @@ public class TeacherBasicService {
 
 		return messageBean;
 
+	}
+
+	public static QueryResultBean<InfoTeacherBasic> getTeacherBaseResult(
+			int page, int rows) {
+
+		QueryResultBean<InfoTeacherBasic> queryResult = InfoTeacherBasic
+				.getTeacherBaseResult(page, rows);
+
+		List<InfoTeacherBasic> list = queryResult.getList();
+
+		for (int i = 0; i < list.size(); i++) {
+
+			addProperties(list.get(i));
+
+		}
+
+		return queryResult;
+	}
+
+	public static int getTeacherRestNumberByWorkId(String t_work_id) {
+
+		InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic.dao
+				.findById(t_work_id);
+
+		int t_number = infoTeacherBasic.getInt("t_number");
+
+		int number = 0;
+
+		if (t_number != 0) {
+			number = t_number
+					- InfoTeacherBasic.getSeletedNumberByWorkId(t_work_id);
+		}
+
+		return number;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public static List<InfoTeacherBasic> getTeacherBaseList() {
+
+		List<InfoTeacherBasic> list = InfoTeacherBasic.getTeacherBaseList();
+
+		for (int i = 0; i < list.size(); i++) {
+			addProperties(list.get(i));
+
+		}
+
+		return list;
+
+	}
+
+	public List<InfoTeacherBasic> getMyTeacherBasicList(String s_id) {
+
+		List<LogicVolunteerResult> logicTeacherStudentList = LogicVolunteerResult
+				.getVolunteerResultBySId(s_id);
+
+		String t_work_id = "";
+		if (logicTeacherStudentList != null
+				&& logicTeacherStudentList.size() > 0) {
+			LogicVolunteerResult logicVolunteerResult = logicTeacherStudentList
+					.get(0);
+			t_work_id = logicVolunteerResult.get("t_work_id");
+		}
+
+		InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
+				.getTmsTeacher(t_work_id);
+		List<InfoTeacherBasic> list = new ArrayList<InfoTeacherBasic>();
+		list.add(infoTeacherBasic);
+		return list;
+	}
+
+	public boolean uploadPDF(String t_work_id, String t_file_path) {
+		InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
+				.getTmsTeacher(t_work_id);
+
+		infoTeacherBasic.set("t_file_path", t_file_path);
+
+		return infoTeacherBasic.update();
 	}
 
 }

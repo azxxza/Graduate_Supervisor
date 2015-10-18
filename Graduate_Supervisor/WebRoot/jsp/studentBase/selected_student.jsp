@@ -40,7 +40,7 @@ function initBasicGrid() {
 	 	 {field : 's_sex',title : '性别',width : getWidth(0.2),align : 'center'},
 	 	 {field:  'detail',title:'详细信息',width:getWidth(0.25),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='detail("+index+")'></a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='studentScore("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
@@ -72,7 +72,17 @@ jQuery(function() {
 	
 });
 
-
+/**
+ * 详细信息
+ */
+function studentScore(index) {
+	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
+	var row = $('#basicGrid_div').datagrid('getSelected');
+	var s_id = row.s_id;
+	var menu_href = "${pageContext.request.contextPath}/studentBase/studentScore?s_id="
+		+ s_id;
+	parent.addTabs("详细信息",menu_href);
+}
 
 </script>
 </head>

@@ -116,7 +116,7 @@ function initBasicGrid(isOpen) {
 		 {field : 't_number',title : '名额(个)',width : getWidth(0.08),align : 'center'},
 		 {field:  'detail',title:'详细信息',width:getWidth(0.08),align:'center',
        		 formatter: function(value,row,index){
-				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none'  onclick='detail("+index+")'></a>";  
+				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none'  onclick='teacherDetail("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
@@ -277,11 +277,11 @@ jQuery(function() {
 /**
  * 详细信息
  */
-function detail(index) {
+function teacherDetail(index) {
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var t_work_id = row.t_work_id;
-	var menu_href = "${ctx}/teacherBase/detail?t_work_id="
+	var menu_href = "${ctx}/teacherBase/teacherDetail?t_work_id="
 		+ t_work_id;
 	parent.addTabs("详细信息",menu_href);
 }

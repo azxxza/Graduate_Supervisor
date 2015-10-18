@@ -1,40 +1,19 @@
 package com.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import com.model.InfoTeacherBasic;
-import com.model.LogicStudentVolunteer;
-import com.model.LogicTeacherStudent;
-import com.service.VolunteerService;
-import com.util.ItemBean;
-import com.util.MessageBean;
-import com.util.QueryResult;
+import com.bean.ItemBean;
+import com.bean.MessageBean;
+import com.model.LogicDoVolunteer;
+import com.service.DoVolunteerService;
 
 public class StudentVolunteerController extends BaseController {
 
-	private VolunteerService volunteerService = new VolunteerService();
+	private DoVolunteerService volunteerService = new DoVolunteerService();
 
-	public void getStudentVolunteerList() {
-		QueryResult<LogicStudentVolunteer> queryResult = null;
-
-		int page = getParaToInt("page").intValue();
-		int rows = getParaToInt("rows").intValue();
-
-		String t_work_id = getId();
-
-		queryResult = LogicStudentVolunteer.getVolunteerResultByWorkId(
-				Integer.valueOf(page), Integer.valueOf(rows), t_work_id);
-
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-
-		jsonMap.put("rows", queryResult.getList());
-		jsonMap.put("total", Long.valueOf(queryResult.getCount()));
-
-		renderJson(jsonMap);
-	}
-
+	/*
+	 * 提交志愿
+	 */
 	public void saveStudentVolunteer() {
 
 		String para = getPara("para");
@@ -47,38 +26,27 @@ public class StudentVolunteerController extends BaseController {
 		renderJson(messageBean);
 	}
 
+	/*
+	 * 删除志愿
+	 */
 	public void deleteVolunteer() {
+
 		String t_work_id = getPara("t_work_id");
 
 		MessageBean messageBean = new MessageBean();
 
-		if (t_work_id != null) {
-			LogicTeacherStudent logicTeacherStudent = LogicTeacherStudent
-					.getLogicTeacherStudent(t_work_id, getId());
-
-			if (logicTeacherStudent != null) {
-				messageBean.setFlag(false);
-				InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
-						.getTmsTeacher(t_work_id);
-				String t_name = (String) infoTeacherBasic.get("t_name");
-				messageBean.setMessage("你已经被" + t_name + "选走啦，小伙子");
-			} else {
-				LogicStudentVolunteer logicStudentVolunteer = LogicStudentVolunteer
-						.getVolunteerByWorkIdAndSId(getId(), t_work_id);
-				boolean flag = logicStudentVolunteer.delete();
-				messageBean.setFlag(flag);
-				if (flag == false) {
-					messageBean.setMessage("数据库操作失败");
-				}
-
-			}
-
+		LogicDoVolunteer logicStudentVolunteer = LogicDoVolunteer
+				.getVolunteerByWorkIdAndSId(getId(), t_work_id);
+		boolean flag = logicStudentVolunteer.delete();
+		messageBean.setFlag(flag);
+		if (!flag) {
+			messageBean.setMessage("删除失败");
 		}
 
 		renderJson(messageBean);
 	}
 
-	/**
+	/*
 	 * 教师选择学生
 	 */
 	public void teacherSelect() {

@@ -1,13 +1,12 @@
 package com.controller;
 
+import com.bean.MessageBean;
 import com.model.SysUser;
-import com.util.MessageBean;
 
 /**
- * 普通教师，系主任，办公室，领导登录
  * 
- * @author azx
- * 
+ * @author Administrator
+ *
  */
 public class UserController extends BaseController {
 
@@ -35,10 +34,10 @@ public class UserController extends BaseController {
 				messageBean.setFlag(true);
 			} else {
 				messageBean.setFlag(false);
-				messageBean.setMessage("数据库保存失败");
+				messageBean.setMessage("保存失败");
 			}
 		}
-		
+
 		renderJson(messageBean);
 
 	}

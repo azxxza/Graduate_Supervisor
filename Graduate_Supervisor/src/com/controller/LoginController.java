@@ -1,10 +1,10 @@
 package com.controller;
 
+import com.bean.MessageBean;
 import com.model.SysUser;
-import com.util.MessageBean;
 
 /**
- * 普通教师，系主任，办公室，领导登录
+ * 学生，教师，管理员
  * 
  * @author azx
  * 
@@ -12,7 +12,7 @@ import com.util.MessageBean;
 public class LoginController extends BaseController {
 
 	/**
-	 * 默认访问登录页面
+	 * 访问登录页面
 	 */
 	public void login() {
 

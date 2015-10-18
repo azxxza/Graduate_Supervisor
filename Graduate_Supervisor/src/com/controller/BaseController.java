@@ -31,7 +31,7 @@ public class BaseController extends Controller {
 		SysUser user = getLoginUser();
 
 		if (user != null) {
-			role = user.getInt(SysUser.s_user_role_id);// 对应admin_power的权限id
+			role = user.getInt("s_user_role_id");// 对应admin_power的权限id
 		} else {
 			render("login.jsp");
 		}
@@ -42,7 +42,7 @@ public class BaseController extends Controller {
 	protected String getId() {
 
 		SysUser user = getLoginUser();
-		
+
 		return user.getStr("s_foreign_id");
 
 	}

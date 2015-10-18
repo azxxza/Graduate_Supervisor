@@ -21,10 +21,9 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> {
 	 */
 	public static List<InfoTeacherBasic> getTeacherBaseList() {
 
-		List<InfoTeacherBasic> list = dao.find("select * from "
-				+ INFO_TEACHER_BASIC);
+		String sql = "select * from " + INFO_TEACHER_BASIC;
 
-		return list;
+		return dao.find(sql);
 
 	}
 
@@ -39,35 +38,19 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> {
 
 		String sql = "from " + INFO_TEACHER_BASIC;
 
+		List<InfoTeacherBasic> list = null;
+
+		long count = 0;
+
 		Page<InfoTeacherBasic> pageList = dao.paginate(page, rows,
 				"Select *  ", sql);
 
-		List<InfoTeacherBasic> list = pageList.getList();
+		list = pageList.getList();
 
-		long count = Db.queryLong("select count(1) " + INFO_TEACHER_BASIC);
+		count = Db.queryLong("select count(1) " + sql);
 
-		QueryResultBean<InfoTeacherBasic> queryResult = new QueryResultBean<InfoTeacherBasic>(
-				count, list);
+		return new QueryResultBean<InfoTeacherBasic>(count, list);
 
-		return queryResult;
-	}
-
-	public static QueryResultBean<InfoTeacherBasic> getTeacherBaseResult(
-			int page, int rows, String s_id) {
-
-		String sql = "from " + INFO_TEACHER_BASIC;
-
-		Page<InfoTeacherBasic> pageList = dao.paginate(page, rows, "Select * ",
-				sql);
-
-		List<InfoTeacherBasic> list = pageList.getList();
-
-		long count = Db.queryLong("select count(1) " + sql);
-
-		QueryResultBean<InfoTeacherBasic> queryResult = new QueryResultBean<InfoTeacherBasic>(
-				count, list);
-
-		return queryResult;
 	}
 
 	public static InfoTeacherBasic getTmsTeacher(String t_work_id) {
@@ -86,19 +69,4 @@ public class InfoTeacherBasic extends Model<InfoTeacherBasic> {
 		return count.intValue();
 	}
 
-	// public int compareTo(InfoTeacherBasic o) {
-	// if (getStr("s_t_volunteer").equals("")) {
-	// if (o.getStr("s_t_volunteer").equals("")) {
-	// return 0;
-	// }
-	// return 1;
-	// }
-	//
-	// if (o.getStr("s_t_volunteer").equals("")) {
-	// return -1;
-	// }
-	// return getStr("s_t_volunteer").compareTo(o.getStr("s_t_volunteer"));
-	// }
-
-	
 }

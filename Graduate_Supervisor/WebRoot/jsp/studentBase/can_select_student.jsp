@@ -86,9 +86,10 @@ function studentScore(index) {
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var s_id = row.s_id;
+	var s_name = row.s_name;
 	var menu_href = "${pageContext.request.contextPath}/studentBase/studentScore?s_id="
 		+ s_id;
-	parent.addTabs("详细信息",menu_href);
+	parent.addTabs(s_name + "详细信息",menu_href);
 }
 
 
@@ -105,10 +106,11 @@ jQuery(function() {
 function select(){
 	var rows = jQuery("#basicGrid_div").datagrid("getSelections");
 	
-	if (rows == null || rows == ""){
-		window.alert('还未选择数据');
+	if (rows == ""){
+		$.messager.alert('提示信息','还未选择学生','warning');
 		return;
 	} else {
+	
 		var rest_count = document.getElementById("rest_count").value;
 		
 		var rest_count_int = parseInt(rest_count);
@@ -139,9 +141,6 @@ function select(){
 		
 		
 	}
-	
-	
-	
 	
 	
 		
@@ -187,18 +186,14 @@ function teacher_select(total_id){
 	<c:if test="${can_select == true}">
 
 	<div id="toobar"  style="padding-right: 5%;">
-
-		<privilege:show powerName="menu_teacher">
 	
 			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="select();">选择学生</a>
-		
-		</privilege:show>
 		
 	</div>
 	
 	</c:if>
 	
-	<privilege:show powerName="menu_teacher">
+	
 
 	<div id="basic_div" data-options="region:'center',title:'学生信息列表'">
 		<input type="hidden" id="rest_count" name="rest_count" value="${rest_count}">
@@ -206,17 +201,6 @@ function teacher_select(total_id){
 		
 	</div>
 	
-	</privilege:show>
-	
-	<privilege:show powerName="menu_admin">
-	
-	<div id="basic_div" data-options="region:'center'">
-		
-		<div id="basicGrid_div"></div>
-		
-	</div>
-	
-	</privilege:show>
 
 	<%@include file="../common/shade.jsp" %>
 </body>

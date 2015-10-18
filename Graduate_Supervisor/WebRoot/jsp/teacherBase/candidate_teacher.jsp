@@ -5,7 +5,7 @@
 <title>基本信息列表</title>
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
 <style type="text/css">
 	.datagrid-cell-rownumber{
@@ -14,12 +14,7 @@
 </style>
 <script language="javascript">
 
-var para = undefined;
 
-var array = new Array();
-
-var before = undefined;
- 
 var editIndex = undefined;
 function endEditing(){
 	if (editIndex == undefined){return true}
@@ -33,16 +28,14 @@ function endEditing(){
 }
 function onClickCell(index, field){
 
-	
-	
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var rest_number = row.rest_number;
 	var s_t_volunteer = row.s_t_volunteer;
-	if(rest_number == 0 && (s_t_volunteer == undefined || s_t_volunteer == '')){
+	if(rest_number == 0 || (field == 's_t_volunteer' && s_t_volunteer != undefined)){
 		return;
 	}else {
-		if(s_t_volunteer == undefined || s_t_volunteer == ''){
+		if(s_t_volunteer == undefined){
 			if (endEditing()){
 				$('#basicGrid_div').datagrid('selectRow', index)
 						.datagrid('editCell', {index:index,field:field});
@@ -53,16 +46,7 @@ function onClickCell(index, field){
 	
 	
 	}
-	
-	if(field == 's_t_volunteer'){
-		if (endEditing()){
-			$('#basicGrid_div').datagrid('selectRow', index)
-						.datagrid('editCell', {index:index,field:field});
-				editIndex = index;
-			return;
-		}
-	}
-	
+
 	$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
 	$('.delcls').linkbutton({text : '删除志愿',plain : true,iconCls : 'icon-trash'});
 	$('.addcls').linkbutton({text : '添加志愿',plain : true,iconCls : 'icon-add'});
@@ -121,7 +105,7 @@ function initBasicGrid(isOpen) {
        		 } 
 		 },
 		 
-		
+		 {field:  's_t_volunteer_copy',hidden:true},
 		 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.09),align:'center',
 			  editor : {  type : 'combobox',  options : { 
 			  	 id : 'combo', 
@@ -133,15 +117,16 @@ function initBasicGrid(isOpen) {
          	  },
          	  
          	   formatter: function(value,row,index){
+         	   
          	   		var del = "<a href='#' class='addcls' style='color:blue'></a>";	
          	   		
          	   		if(isOpen == false){
          	   			return '';
          	   		}
          	   		
-					if(value != undefined && value != '' && row.rest_number > 0){
+					if(value != undefined){
 			 			return '第 ' + value +  ' 志愿';
-			 		}else if(row.rest_number <= 0){
+			 		}else if(row.rest_number  <=  0){
 			 			return ''; 
 			 		}else {
 			 			return del;
@@ -198,38 +183,38 @@ function initBasicGrid(isOpen) {
 			$.messager.alert('提示信息','数据加载失败','error');
 		},
 		
-		onBeforeEdit:function(index, row){
+// 		onBeforeEdit:function(index, row){
 		
-			before = row.s_t_volunteer;
+// 			before = row.s_t_volunteer;
 			
-		},
+// 		},
 		
-		 onAfterEdit:function(index, row, changes){
+// 		 onAfterEdit:function(index, row, changes){
 		 
-		 	var s_t_volunteer = row.s_t_volunteer;
+// 		 	var s_t_volunteer = row.s_t_volunteer;
 		 	
-		 	if(s_t_volunteer != before){
-		 		var t_work_id = row.t_work_id;
+// 		 	if(s_t_volunteer != before){
+// 		 		var t_work_id = row.t_work_id;
 		 	
-		 	if(s_t_volunteer != undefined && s_t_volunteer != ""){
+// 		 	if(s_t_volunteer != undefined && s_t_volunteer != ""){
 		 	
-		 		var par = row.t_work_id + "," + row.s_t_volunteer;
-		 		for(var i = 0; i < array.length; i++){
+// 		 		var par = row.t_work_id + "," + row.s_t_volunteer;
+// 		 		for(var i = 0; i < array.length; i++){
 		 		
-		 			if(array[i].charAt(0) == t_work_id){
-		 				break;
-		 			}
+// 		 			if(array[i].charAt(0) == t_work_id){
+// 		 				break;
+// 		 			}
 		 			
-		 		}
+// 		 		}
 		 		
-		 		array.push(par);
+// 		 		array.push(par);
 		 
-		 		para = array.join(";");
-		 	}
-		 	}
+// 		 		para = array.join(";");
+// 		 	}
+// 		 	}
 		 	
 		 	
-	    }
+// 	    }
 		
 	});
 	
@@ -289,9 +274,14 @@ function teacherDetail(index) {
 /**
  * 提交志愿
  */
+ 
+ 
+
 function save(){
 
-	var count = 0;
+	var array = new Array();
+	
+	var para = undefined;
 	
 	jQuery("#basicGrid_div").datagrid('acceptChanges');
 	
@@ -299,20 +289,22 @@ function save(){
 	
 	var rows = data.rows;
 	
-	for(var i = 0;i<rows.length;i++){
-		
+	var count = 0;
+	
+	for(var i = 0; i < rows.length; i++){
 		var s_t_volunteer = rows[i].s_t_volunteer;
-		if (s_t_volunteer != undefined && s_t_volunteer != ""){
+		var s_t_volunteer_copy = rows[i].s_t_volunteer_copy;
+		if (s_t_volunteer != undefined && s_t_volunteer != '' && s_t_volunteer != s_t_volunteer_copy){
+			var t_work_id = rows[i].t_work_id;
+			para = t_work_id + ',' + s_t_volunteer;
+			array.push(para);
 			count = count + 1;
 		}
 	
 	}
 	
 	if(count < 1){
-		$.messager.alert('提示信息','没有选择志愿','warning',function(){
-			jQuery("#basicGrid_div").datagrid("reload");
-		});
-		
+		$.messager.alert('提示信息','没有选择志愿','warning');
 		return;
 	}
 	
@@ -325,37 +317,33 @@ function save(){
 	}
 	
 	
+	para = array.join(";");
+	
 	var jsonPara = {"para" : para};
-	
-	if(para != undefined){
-		var  saveURL = "${ctx}/studentVolunteer/saveStudentVolunteer?date="
-				+ new Date() + "";
-	
-		jQuery.post(saveURL,jsonPara,function(jsonData) {
-			var flag = jsonData.flag;
-			var message = jsonData.message;
-			if(flag == true){
-				$.messager.alert('提示信息',message,'info',function(){
-					jQuery("#basicGrid_div").datagrid("reload");
-				});
-				
-			
-			}else {
-				
-				$.messager.alert('提示信息',message,'error',function(){
-					jQuery("#basicGrid_div").datagrid("reload");
-				});
-				
-			}
-			
-			para = undefined;
-			array = new Array();
+
+	var  saveURL = "${ctx}/studentVolunteer/saveStudentVolunteer?date="
+			+ new Date() + "";
+
+	jQuery.post(saveURL,jsonPara,function(jsonData) {
+		var flag = jsonData.flag;
+		var message = jsonData.message;
+		if(flag == true){
+			$.messager.alert('提示信息',message,'info',function(){
+				jQuery("#basicGrid_div").datagrid("reload");
+			});
 			
 		
-		}, "json");
-	}else {
-		alert("没有可提交的志愿");
-	}
+		}else {
+			
+			$.messager.alert('提示信息',message,'error',function(){
+				jQuery("#basicGrid_div").datagrid("reload");
+			});
+			
+		}
+		
+	
+	}, "json");
+	
 	
 	
 	
@@ -393,8 +381,6 @@ function delVolunteer(t_work_id){
 
 function undo(){
 	jQuery("#basicGrid_div").datagrid('rejectChanges');
-	para = undefined;
-	array = new Array();
 }
 
 

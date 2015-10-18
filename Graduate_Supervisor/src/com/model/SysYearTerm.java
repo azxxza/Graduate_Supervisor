@@ -16,7 +16,7 @@ public class SysYearTerm extends Model<SysYearTerm> {
 
 	public static List<SysYearTerm> getYearTermList() {
 
-		String sql = "from " + SYS_YEAR_TERM;
+		String sql = "select * from " + SYS_YEAR_TERM;
 
 		return dao.find(sql);
 

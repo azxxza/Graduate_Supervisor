@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.bean.ItemBean;
 import com.bean.MessageBean;
-import com.bean.QueryResultBean;
 import com.model.LogicDoVolunteer;
 import com.model.LogicVolunteerResult;
 
@@ -14,33 +13,28 @@ public class DoVolunteerService {
 
 		List<ItemBean> treeList = new ArrayList<ItemBean>();
 
-		QueryResultBean<LogicDoVolunteer> queryResult = LogicDoVolunteer
-				.getVolunteerResultBySId(s_id);
+		List<LogicDoVolunteer> list = LogicDoVolunteer
+				.getVolunteerListBySId(s_id);
 
-		if (queryResult != null) {
+		List<String> volunteerList = new ArrayList<String>();
 
-			List<LogicDoVolunteer> list = queryResult.getList();
+		if (list != null) {
+			for (int i = 0; i < list.size(); i++) {
+				LogicDoVolunteer logicStudentVolunteer = list.get(i);
+				String s_t_volunteer = logicStudentVolunteer
+						.get("s_t_volunteer");
 
-			List<String> volunteerList = new ArrayList<String>();
-
-			if (list != null) {
-				for (int i = 0; i < list.size(); i++) {
-					LogicDoVolunteer logicStudentVolunteer = list.get(i);
-					String s_t_volunteer = logicStudentVolunteer
-							.get("s_t_volunteer");
-
-					volunteerList.add(s_t_volunteer);
-
-				}
-			}
-
-			for (int i = 1; i <= 5; i++) {
-				if (volunteerList.contains(i + "")) {
-					continue;
-				}
-				treeList.add(new ItemBean(i + "", "第 " + i + " 志愿"));
+				volunteerList.add(s_t_volunteer);
 
 			}
+		}
+
+		for (int i = 1; i <= 5; i++) {
+			if (volunteerList.contains(i + "")) {
+				continue;
+			}
+			treeList.add(new ItemBean(i + "", "第 " + i + " 志愿"));
+
 		}
 
 		return treeList;
@@ -115,6 +109,8 @@ public class DoVolunteerService {
 
 	public MessageBean doStudentVolunteer(String para, String s_id) {
 
+		List<LogicDoVolunteer> list = new ArrayList<LogicDoVolunteer>();
+
 		MessageBean messageBean = new MessageBean();
 
 		int sucessCount = 0;
@@ -141,8 +137,27 @@ public class DoVolunteerService {
 
 			volunteer.set("s_t_volunteer", s_t_volunteer);
 
-			boolean flag = volunteer.save();
+			list.add(volunteer);
 
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+			LogicDoVolunteer firstVolunteer = list.get(i);
+			for (int j = 0; j < list.size(); j++) {
+				if (i != j) {
+					LogicDoVolunteer secondVolunteer = list.get(j);
+					if (firstVolunteer.getStr("s_t_volunteer").equals(
+							secondVolunteer.getStr("s_t_volunteer"))) {
+						messageBean.setFlag(false);
+						messageBean.setMessage("存在重复的志愿");
+						return messageBean;
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < list.size(); i++) {
+			boolean flag = list.get(i).save();
 			if (flag) {
 				sucessCount++;
 			}
@@ -247,7 +262,7 @@ public class DoVolunteerService {
 	public static boolean deleteVolunteerBySId(String s_id) {
 		boolean flag = true;
 		List<LogicDoVolunteer> list = LogicDoVolunteer
-				.getLogicStudentVolunteerListBySId(s_id);
+				.getVolunteerListBySId(s_id);
 		if ((list != null) && (list.size() > 0)) {
 			for (int i = 0; i < list.size(); i++) {
 				flag = list.get(i).delete();

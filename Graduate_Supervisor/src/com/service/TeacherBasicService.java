@@ -6,6 +6,7 @@ import java.util.List;
 import com.bean.MessageBean;
 import com.bean.QueryResultBean;
 import com.model.InfoTeacherBasic;
+import com.model.LogicDoVolunteer;
 import com.model.LogicVolunteerResult;
 
 public class TeacherBasicService {
@@ -16,6 +17,30 @@ public class TeacherBasicService {
 	private static void addProperties(InfoTeacherBasic infoTeacherBasic) {
 
 		String t_work_id = infoTeacherBasic.getStr("t_work_id");
+
+		int rest_number = getTeacherRestNumberByWorkId(t_work_id);
+
+		infoTeacherBasic.put("rest_number", rest_number);
+
+		infoTeacherBasic.put("t_number_copy",
+				infoTeacherBasic.getInt("t_number"));
+
+	}
+
+	private static void addProperties(InfoTeacherBasic infoTeacherBasic,
+			String s_id) {
+
+		String t_work_id = infoTeacherBasic.getStr("t_work_id");
+
+		LogicDoVolunteer doVolunteer = LogicDoVolunteer
+				.getVolunteerByWorkIdAndSId(s_id, t_work_id);
+
+		if (doVolunteer != null) {
+			String s_t_volunteer = doVolunteer.getStr("s_t_volunteer");
+			infoTeacherBasic.put("s_t_volunteer", s_t_volunteer);
+			infoTeacherBasic.put("s_t_volunteer_copy", s_t_volunteer);
+			infoTeacherBasic.put("s_t_status","待定");
+		}
 
 		int rest_number = getTeacherRestNumberByWorkId(t_work_id);
 
@@ -77,6 +102,27 @@ public class TeacherBasicService {
 		for (int i = 0; i < list.size(); i++) {
 
 			addProperties(list.get(i));
+
+		}
+
+		return queryResult;
+	}
+
+	public static QueryResultBean<InfoTeacherBasic> getTeacherBaseResult(
+			int page, int rows, String s_id) {
+
+		QueryResultBean<InfoTeacherBasic> queryResult = InfoTeacherBasic
+				.getTeacherBaseResult(page, rows);
+
+		List<InfoTeacherBasic> list = queryResult.getList();
+
+		for (int i = 0; i < list.size(); i++) {
+
+			InfoTeacherBasic infoTeacherBasic = list.get(i);
+
+			addProperties(infoTeacherBasic);
+
+			addProperties(infoTeacherBasic, s_id);
 
 		}
 

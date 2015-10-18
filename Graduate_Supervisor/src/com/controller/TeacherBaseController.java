@@ -75,6 +75,17 @@ public class TeacherBaseController extends BaseController {
 
 	public void getMyTeacherList() {
 
+		String s_id = getId();
+
+		List<InfoTeacherBasic> list = teacherBasicService
+				.getMyTeacherBasicList(s_id);
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+
+		jsonMap.put("rows", list);
+
+		renderJson(jsonMap);
+
 	}
 
 	/*
@@ -88,7 +99,7 @@ public class TeacherBaseController extends BaseController {
 		int rows = getParaToInt("rows");
 
 		if (getUserRole() == RoleCommon.STUDENT) {
-			queryResult = InfoTeacherBasic.getTeacherBaseResult(page, rows,
+			queryResult = TeacherBasicService.getTeacherBaseResult(page, rows,
 					getId());
 		} else if (getUserRole() == RoleCommon.ADMIN) {
 			queryResult = InfoTeacherBasic.getTeacherBaseResult(page, rows);

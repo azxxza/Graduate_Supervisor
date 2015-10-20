@@ -29,7 +29,7 @@
 	<tlib-version>1.0</tlib-version>
 	<jsp-version>1.2</jsp-version>
 	<short-name>open</short-name>
-	<uri>/open1</uri>
+	<uri>/open</uri>
 	<tag>
 		<!--指定标签名 -->
 		<name>show</name>

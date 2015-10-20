@@ -4,14 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 import com.bean.MessageBean;
 import com.bean.QueryResultBean;
 import com.common.RoleCommon;
+import com.jfinal.core.JFinal;
+import com.jfinal.upload.UploadFile;
 import com.model.InfoStudentBasic;
 import com.model.InfoStudentScore;
 import com.model.SysYearTerm;
 import com.service.StudentBasicService;
 import com.service.TeacherBasicService;
+import com.util.ExcelImportUtil;
 
 /**
  * 访问学生
@@ -20,8 +25,6 @@ import com.service.TeacherBasicService;
  *
  */
 public class StudentBaseController extends BaseController {
-
-	private StudentBasicService studentBasicService = new StudentBasicService();
 
 	/*
 	 * 学生信息管理
@@ -143,7 +146,7 @@ public class StudentBaseController extends BaseController {
 		if (getUserRole() == RoleCommon.TEACHER) {
 			t_work_id = getId();
 		} else if (getUserRole() == RoleCommon.ADMIN) {
-			t_work_id = getSessionAttr("t_work_id");
+			t_work_id = getPara("t_work_id");
 		}
 
 		QueryResultBean<InfoStudentBasic> queryResult = InfoStudentBasic
@@ -177,7 +180,7 @@ public class StudentBaseController extends BaseController {
 
 		String s_id = getPara("s_id");
 
-		List<SysYearTerm> list = studentBasicService.getSysYearTermList(s_id);
+		List<SysYearTerm> list = StudentBasicService.getSysYearTermList(s_id);
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
@@ -194,7 +197,7 @@ public class StudentBaseController extends BaseController {
 
 		String s_id = getPara("s_id");
 
-		String y_t_id = getPara("id");
+		int y_t_id = getParaToInt("id");
 
 		List<InfoStudentScore> list = InfoStudentScore
 				.getInfoStudentScoreListBySIdAndTime(s_id, y_t_id);
@@ -216,7 +219,7 @@ public class StudentBaseController extends BaseController {
 
 		String s_id = getPara("s_id");
 
-		boolean flag = studentBasicService.deleteStudent(s_id);
+		boolean flag = StudentBasicService.deleteStudent(s_id);
 
 		messageBean.setFlag(flag);
 
@@ -225,6 +228,53 @@ public class StudentBaseController extends BaseController {
 		}
 
 		renderJson(messageBean);
+	}
+
+	/*
+	 * 导入学生基本信息
+	 */
+	public void uploadBasicExcel() {
+
+		ServletContext context = JFinal.me().getServletContext();
+
+		String realpath = context.getRealPath("/excel/");
+
+		UploadFile uploadFile = getFile("excelBasic", realpath,
+				200 * 1024 * 1024, "UTF-8");
+
+		ExcelImportUtil importUtil = new ExcelImportUtil();
+
+		String path = realpath + "/" + uploadFile.getFileName();
+
+		importUtil.importBasic(path);
+
+		uploadFile.getFile().delete();
+
+		render("student_manage.jsp");
+
+	}
+
+	/*
+	 * 导入学生成绩信息
+	 */
+	public void uploadScoreExcel() {
+
+		ServletContext context = JFinal.me().getServletContext();
+
+		String realpath = context.getRealPath("/excel/");
+
+		UploadFile uploadFile = getFile("excelScore", realpath,
+				200 * 1024 * 1024, "UTF-8");
+
+		ExcelImportUtil importUtil = new ExcelImportUtil();
+
+		String path = realpath + "/" + uploadFile.getFileName();
+
+		importUtil.importScoreExcel(path);
+
+		uploadFile.getFile().delete();
+
+		render("student_manage.jsp");
 	}
 
 }

@@ -228,9 +228,15 @@
 				
 			</privilege:show>
 			
-			<div title="个人系统设置" data-options="iconCls:'icon-setting'">
+			<div title="设置" data-options="iconCls:'icon-setting'">
 				<ul id="ttt_7">
 					<li data-options="iconCls:'icon-key'"><span>修改密码</span></li>
+				</ul>
+			</div>
+			
+			<div title="帮助" data-options="iconCls:'icon-help'">
+				<ul id="ttt_8">
+					<li data-options="iconCls:'icon-help'"><span>使用帮助</span></li>
 				</ul>
 			</div>
   </div>

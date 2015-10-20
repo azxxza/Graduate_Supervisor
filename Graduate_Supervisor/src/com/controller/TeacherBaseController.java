@@ -9,7 +9,6 @@ import com.bean.MessageBean;
 import com.bean.QueryResultBean;
 import com.common.RoleCommon;
 import com.model.InfoTeacherBasic;
-import com.model.LogicVolunteerResult;
 import com.service.TeacherBasicService;
 import com.service.VolunteerResultService;
 import com.system.CurrentExcuteVolunteer;
@@ -21,10 +20,6 @@ import com.system.CurrentExcuteVolunteer;
  *
  */
 public class TeacherBaseController extends BaseController {
-
-	private TeacherBasicService teacherBasicService = new TeacherBasicService();
-
-	private VolunteerResultService volunteerResultService = new VolunteerResultService();
 
 	/*
 	 * 教师名额分配
@@ -66,7 +61,7 @@ public class TeacherBaseController extends BaseController {
 
 			boolean isOpen = currentExcuteVolunteer.isRunning();
 
-			setAttr("isOpen", true);
+			setAttr("isOpen", isOpen);
 
 			render("candidate_teacher.jsp");
 
@@ -77,7 +72,7 @@ public class TeacherBaseController extends BaseController {
 
 		String s_id = getId();
 
-		List<InfoTeacherBasic> list = teacherBasicService
+		List<InfoTeacherBasic> list = TeacherBasicService
 				.getMyTeacherBasicList(s_id);
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -102,7 +97,7 @@ public class TeacherBaseController extends BaseController {
 			queryResult = TeacherBasicService.getTeacherBaseResult(page, rows,
 					getId());
 		} else if (getUserRole() == RoleCommon.ADMIN) {
-			queryResult = InfoTeacherBasic.getTeacherBaseResult(page, rows);
+			queryResult = TeacherBasicService.getTeacherBaseResult(page, rows);
 		}
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
@@ -139,7 +134,7 @@ public class TeacherBaseController extends BaseController {
 
 		String para = getPara("para");
 
-		MessageBean messageBean = teacherBasicService.saveTeacherNumber(para);
+		MessageBean messageBean = TeacherBasicService.saveTeacherNumber(para);
 
 		renderJson(messageBean);
 	}
@@ -149,7 +144,7 @@ public class TeacherBaseController extends BaseController {
 	 */
 	public void getTeacherJson() {
 
-		List<ItemBean> treeList = volunteerResultService
+		List<ItemBean> treeList = VolunteerResultService
 				.getHasRestTeacherJson();
 
 		renderJson(treeList);

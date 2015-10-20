@@ -87,7 +87,6 @@ function initBasicGrid() {
 
 		onLoadSuccess : function(data) {
 			$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
-			$(this).datagrid('doCellTip',{});
 
 		},
 
@@ -182,7 +181,6 @@ function submitData(){
 		$.messager.alert('提示信息', '没有可提交的志愿','warning');
 		
 	}
-	
 	
 }
 

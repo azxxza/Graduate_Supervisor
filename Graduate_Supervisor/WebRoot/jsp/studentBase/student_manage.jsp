@@ -5,7 +5,7 @@
 <title>基本信息列表</title>
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
 <style type="text/css">
 	.datagrid-cell-rownumber{
@@ -241,7 +241,7 @@ function importScore(){
         <div style="height: 30%;"></div>
         
        <form id="uploadBasicForm"
-			action="${ctx}/admin/uploadBasicExcel"
+			action="${ctx}/studentBase/uploadBasicExcel"
 			name="uploadBasicForm" method="post" enctype="multipart/form-data">
         	 <input  id="excelBasic" name="excelBasic" class="easyui-filebox" data-options="buttonText:'选择excel文件'"><br><br>
         	 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-upload" plain="false" onclick="importBasic();">确定</a>&nbsp;&nbsp;
@@ -257,7 +257,7 @@ function importScore(){
         <div style="height: 30%;"></div>
         
        <form id="uploadScoreForm"
-			action="${ctx}/admin/uploadScoreExcel"
+			action="${ctx}/studentBase/uploadScoreExcel"
 			name="uploadScoreForm" method="post" enctype="multipart/form-data">
         	 <input id="excelScore" name="excelScore" class="easyui-filebox" data-options="buttonText:'选择excel文件'"><br><br>
         	 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-upload" plain="false" onclick="importScore();">确定</a>&nbsp;&nbsp;

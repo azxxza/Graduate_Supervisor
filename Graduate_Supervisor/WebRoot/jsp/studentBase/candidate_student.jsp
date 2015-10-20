@@ -6,7 +6,7 @@
 <title>基本信息列表</title>
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
 <style type="text/css">
 	.datagrid-cell-rownumber{
@@ -67,9 +67,6 @@ function initBasicGrid() {
 		
 		onLoadSuccess : function(data) {
 			$('.detailcls').linkbutton({text : '智育成绩',plain : true,iconCls : 'icon-search'});
-			
-			$(this).datagrid('doCellTip',{});
-
 		},
 		
 	});

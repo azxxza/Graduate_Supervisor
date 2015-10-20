@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="/open" prefix="open"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -387,12 +388,14 @@ function undo(){
 </script>
 </head>
 <body class="easyui-layout">
-<c:if test="${isOpen == true}">
-	<div id="toobar"  style="padding-right: 5%;">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="save();">提交志愿</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="undo();">撤销</a>
-	</div>
-</c:if>	
+<!-- 	<c:if test="${isOpen == true}"> -->
+<open:show>
+		<div id="toobar"  style="padding-right: 5%;">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="save();">提交志愿</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="undo();">撤销</a>
+		</div>
+</open:show>
+<!-- 	</c:if>	 -->
 	<div id="basic_div" data-options="region:'center',title:'教师基本信息列表'">
 		<div id="basicGrid_div"></div>
 	</div>

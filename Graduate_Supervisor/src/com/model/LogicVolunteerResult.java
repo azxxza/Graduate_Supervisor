@@ -14,12 +14,10 @@ public class LogicVolunteerResult extends Model<LogicVolunteerResult> {
 	public static final LogicVolunteerResult dao = new LogicVolunteerResult();
 	private static final String LOGIC_VOLUNTEER_RESULT = TableCommom.LOGIC_VOLUNTEER_RESULT;
 
-	
-
 	public static LogicVolunteerResult getVolunteerResult(String t_work_id,
 			String s_id) {
-		String sql = "select * from logic_teacher_student where t_work_id = "
-				+ t_work_id + " and s_id = " + s_id;
+		String sql = "select * from " + LOGIC_VOLUNTEER_RESULT
+				+ " where t_work_id = " + t_work_id + " and s_id = " + s_id;
 		return dao.findFirst(sql);
 
 	}

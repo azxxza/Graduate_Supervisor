@@ -10,7 +10,7 @@ import com.model.LogicVolunteerResult;
 
 public class VolunteerResultService {
 
-	public List<ItemBean> getHasRestTeacherJson() {
+	public static List<ItemBean> getHasRestTeacherJson() {
 
 		List<InfoTeacherBasic> list = TeacherBasicService.getTeacherBaseList();
 

@@ -51,7 +51,7 @@ public class TeacherBasicService {
 
 	}
 
-	public MessageBean saveTeacherNumber(String para) {
+	public static MessageBean saveTeacherNumber(String para) {
 
 		MessageBean messageBean = new MessageBean();
 
@@ -163,7 +163,7 @@ public class TeacherBasicService {
 
 	}
 
-	public List<InfoTeacherBasic> getMyTeacherBasicList(String s_id) {
+	public static List<InfoTeacherBasic> getMyTeacherBasicList(String s_id) {
 
 		List<LogicVolunteerResult> logicTeacherStudentList = LogicVolunteerResult
 				.getVolunteerResultBySId(s_id);
@@ -183,7 +183,7 @@ public class TeacherBasicService {
 		return list;
 	}
 
-	public boolean uploadPDF(String t_work_id, String t_file_path) {
+	public static boolean uploadPDF(String t_work_id, String t_file_path) {
 		InfoTeacherBasic infoTeacherBasic = InfoTeacherBasic
 				.getTmsTeacher(t_work_id);
 

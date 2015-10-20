@@ -7,8 +7,7 @@
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/easyui.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link  rel="stylesheet" type="text/css"
-	href="${ctx}/easyui_1.4.3/themes/default/easyui.css">
+<link  rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <script type="text/javascript">
 	
 $(function() {
@@ -73,15 +72,24 @@ function submitData() {
 		<span class="systemlogo"></span>
 
 		<div class="loginbox">
+		
+		<div style="height: 10px;"></div>
 			<form id="login">
 				<ul>
 
-					<li><input class="easyui-textbox" id="username" name="username" style="width:70%;height:40px;padding:12px" data-options="prompt:'请输入用户名',iconCls:'icon-man',iconWidth:38"></li>
-
-					<li><input  class="easyui-textbox" id="password" name="password"  style="width:70%;height:40px;padding:12px;  "  data-options="prompt:'请输入密码',iconCls:'icon-lock',iconWidth:38, type:'password'"></li>
+					<li>
+					<label>用户名:&nbsp;</label>
+					<input class="easyui-textbox" id="username" name="username" style="width:60%;height:40px;padding:12px" data-options="prompt:'请输入用户名',iconCls:'icon-man',iconWidth:38">
+					
+					</li>
+					
+					<li>
+					<label>密码:&nbsp;&nbsp;&nbsp;&nbsp;</label>
+					<input  class="easyui-textbox" id="password" name="password"  style="width:60%;height:40px;padding:12px;  "  data-options="prompt:'请输入密码',iconCls:'icon-lock',iconWidth:38, type:'password'"></li>
 
 					<li>
-						<label style="font-size: 13px; padding-left: 0px;">学生</label> 
+						
+						<label style="font-size: 13px; padding-left: 70px;">学生</label> 
 						<input type="radio" name="role" value="1" style="vertical-align: middle;" checked="checked">
 						
 						<label style="font-size: 13px;">教师</label> 
@@ -92,10 +100,12 @@ function submitData() {
 						
 					</li>
 
-					<li><input id="doLogin" type="button" class="loginbtn"
-						value="登录" onclick="submitData()"/>&nbsp;&nbsp;&nbsp;<input
+					<li>
+					
+					<input id="doLogin" type="button" class="loginbtn" style="margin-left:70px;"
+						value="登录" onclick="submitData()"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
 						id="login" type="button" class="loginbtn" value="重置" onclick="reset()" /><label
-						id="error" style="color: red;"></label></li>
+						id="error" style="color: red;padding-left: 3px;"></label></li>
 				</ul>
 			</form>
 		</div>

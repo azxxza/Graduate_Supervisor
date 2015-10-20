@@ -66,9 +66,7 @@ function initBasicGrid() {
 		] ],
 
 		onLoadSuccess : function(data) {
-		$('.detailcls').linkbutton({text : '学生列表',plain : true,iconCls : 'icon-search'});
-			$(this).datagrid('doCellTip',{});
-
+			$('.detailcls').linkbutton({text : '学生列表',plain : true,iconCls : 'icon-search'});
 		},
 
 		onLoadError : function() {

@@ -13,10 +13,7 @@
 	}
 </style>
 <script type="text/javascript">
-		
-var para = undefined;
 
-var array = new Array(); 
 
 var editIndex = undefined;
 function endEditing(){
@@ -71,9 +68,11 @@ function initBasicGrid() {
 		 		
 			 }
 	 	 },
+	 	 {field : 'r_t_start_time_copy',hidden:true},
 	 	 {field : 'r_t_start_time',title : '开始时间(点击单元格修改时间)',width : getWidth(0.2),align : 'center',
 	 	 	editor:{ type:'datetimebox',options:{editable:false}}
 	 	 },
+	 	 {field : 'r_t_end_time_copy',hidden:true},
 	 	 {field : 'r_t_end_time',title : '结束时间(点击单元格修改时间)',width : getWidth(0.2),align : 'center',
 	 		 editor:{ type:'datetimebox',options:{editable:false}}
 	 	 },
@@ -81,7 +80,7 @@ function initBasicGrid() {
 	 	  {field:  'volunteer_time',title:'编辑志愿时间',width:getWidth(0.2),align:'center',
 		 	formatter : function(value, row, index) {
 	 			var del = "<a href='#' class='timecls' style='color:blue;text-decoration: none;' onclick='add("
-				+ row.r_t_round + ")'>志愿时间</a>";
+				+ row.r_t_round + ")'></a>";
 		 		return del; 
 			 }
 		 },
@@ -89,7 +88,7 @@ function initBasicGrid() {
 		  {field:  'option',title:'操作',width:getWidth(0.17),align:'center',
 		 	formatter : function(value, row, index) {
 	 			var del = "<a href='#' class='delcls' style='color:blue;text-decoration: none;' onclick='confirmDel("
-				+index+ ")'>删除</a>";
+				+index+ ")'></a>";
 		 		return del; 
 			 }
 		 }
@@ -103,7 +102,6 @@ function initBasicGrid() {
 		},
 		
 		onLoadSuccess : function(data) {
-			$(this).datagrid('doCellTip',{});
 			$('.delcls').linkbutton({text : '删除',plain : true,iconCls : 'icon-trash'});
 			$('.timecls').linkbutton({text : '志愿时间',plain : true,iconCls : 'icon-time'});
 
@@ -131,6 +129,11 @@ jQuery(function() {
  */
 function submitData() {
 
+			
+	var para = undefined;
+	
+	var array = new Array(); 
+
 	saveData();
 	
 	var data = jQuery("#basicGrid_div").datagrid("getData");
@@ -140,10 +143,19 @@ function submitData() {
 	for(var i = 0;i<rows.length;i++){
 		var id =  rows[i].id;
 		var r_t_start_time = rows[i].r_t_start_time;
+		var r_t_start_time_copy = rows[i].r_t_start_time_copy;
 		var r_t_end_time = rows[i].r_t_end_time;
-		var par =  id + "," + r_t_start_time + "," + r_t_end_time;
+		var r_t_end_time_copy = rows[i].r_t_end_time_copy;
+		if(r_t_start_time != r_t_start_time_copy || r_t_end_time != r_t_end_time_copy){
+			var par =  id + "," + r_t_start_time + "," + r_t_end_time;
 		array.push(par);
+		}
 		
+	}
+	
+	if(array.length == 0){
+		$.messager.alert('提示信息','没有可以提交的数据','warning');
+		return;
 	}
 	
 	para = array.join(";");

@@ -16,7 +16,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
 
-import com.bean.QueryResultBean;
 import com.model.InfoStudentBasic;
 import com.model.InfoStudentScore;
 import com.model.SysUser;
@@ -73,10 +72,8 @@ public class ExcelImportUtil {
 
 		if (sheet != null) {
 
-			QueryResultBean<InfoStudentBasic> queryResult = InfoStudentBasic
-					.getStudentResult(0, 0);
-
-			List<InfoStudentBasic> dataBaseList = queryResult.getList();
+			List<InfoStudentBasic> dataBaseList = InfoStudentBasic
+					.getStudentBasiclist();
 
 			List<InfoStudentBasic> excelList = getBasicContent(sheet);
 
@@ -202,6 +199,9 @@ public class ExcelImportUtil {
 		SysYearTerm sysYearTerm = SysYearTerm.getSysYearTermByYearAndTerm(
 				year.trim(), term.trim());
 
+		/*
+		 * 学年不存在，导入表
+		 */
 		if (sysYearTerm == null) {
 
 			sysYearTerm = new SysYearTerm();
@@ -211,6 +211,13 @@ public class ExcelImportUtil {
 			sysYearTerm.set("term", term);
 
 			sysYearTerm.save();
+		} else {
+			int y_t_id = sysYearTerm.getInt("id");
+			List<InfoStudentScore> list = InfoStudentScore
+					.getInfoStudentScoreListByTime(y_t_id);
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).delete();
+			}
 		}
 
 		Row titleRow = sheet.getRow(3);

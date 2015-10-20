@@ -9,7 +9,7 @@ import com.model.LogicDoVolunteer;
 import com.model.LogicVolunteerResult;
 
 public class DoVolunteerService {
-	public List<ItemBean> getVolunteerJson(String s_id) {
+	public static List<ItemBean> getVolunteerJson(String s_id) {
 
 		List<ItemBean> treeList = new ArrayList<ItemBean>();
 
@@ -41,7 +41,7 @@ public class DoVolunteerService {
 
 	}
 
-	public MessageBean doTeacherVolunteer(String total_id, String t_work_id) {
+	public static MessageBean doTeacherVolunteer(String total_id, String t_work_id) {
 
 		MessageBean messageBean = new MessageBean();
 
@@ -107,7 +107,7 @@ public class DoVolunteerService {
 
 	}
 
-	public MessageBean doStudentVolunteer(String para, String s_id) {
+	public static MessageBean doStudentVolunteer(String para, String s_id) {
 
 		List<LogicDoVolunteer> list = new ArrayList<LogicDoVolunteer>();
 
@@ -189,7 +189,7 @@ public class DoVolunteerService {
 
 	}
 
-	public MessageBean doAdminVolunteer(String para) {
+	public static MessageBean doAdminVolunteer(String para) {
 
 		MessageBean messageBean = new MessageBean();
 

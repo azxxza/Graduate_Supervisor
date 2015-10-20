@@ -10,6 +10,9 @@ import com.model.SysUser;
  */
 public class UserController extends BaseController {
 
+	/*
+	 * 更新密码
+	 */
 	public void updatePassword() {
 		MessageBean messageBean = new MessageBean();
 

@@ -1,6 +1,5 @@
 package com.app;
 
-
 import com.controller.AdminController;
 import com.controller.LoginController;
 import com.controller.StudentBaseController;
@@ -26,8 +25,10 @@ import com.model.LogicDoVolunteer;
 import com.model.LogicVolunteerResult;
 import com.model.SysOpenTime;
 import com.model.SysUser;
+import com.model.SysUserLog;
+import com.model.SysVolunteerTime;
 import com.model.SysYearTerm;
-import com.model.VolunteerTime;
+import com.system.QuartzService;
 
 public class AppConfig extends JFinalConfig {
 
@@ -83,15 +84,15 @@ public class AppConfig extends JFinalConfig {
 
 		arp.addMapping("sys_round_open_time", "id", SysOpenTime.class);
 
-		arp.addMapping("sys_volunteer_open_time", "id", VolunteerTime.class);
-
-		arp.addMapping("info_student_score", "id", InfoStudentScore.class);
+		arp.addMapping("sys_volunteer_open_time", "id", SysVolunteerTime.class);
 
 		arp.addMapping("sys_year_term", "id", SysYearTerm.class);
 
-		// QuartzPlugin plugin = new QuartzPlugin();
-		//
-		// me.add(plugin);
+		arp.addMapping("sys_user_log", "id", SysUserLog.class);
+
+		QuartzService plugin = new QuartzService();
+
+		me.add(plugin);
 	}
 
 	public static void main(String[] args) {

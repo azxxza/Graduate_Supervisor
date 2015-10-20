@@ -53,4 +53,10 @@ public interface TableCommom {
 	 */
 
 	public static final String SYS_YEAR_TERM = "sys_year_term";
+	
+	/*
+	 * 用户登录日志表
+	 */
+	
+	public static final String SYS_USER_LOG = "sys_user_log";
 }

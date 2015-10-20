@@ -5,7 +5,7 @@
 <title>基本信息列表</title>
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
 <style type="text/css">
 	.datagrid-cell-rownumber{
@@ -79,9 +79,10 @@ function studentScore(index) {
 	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
 	var row = $('#basicGrid_div').datagrid('getSelected');
 	var s_id = row.s_id;
+	var s_name = row.s_name;
 	var menu_href = "${pageContext.request.contextPath}/studentBase/studentScore?s_id="
 		+ s_id;
-	parent.addTabs("详细信息",menu_href);
+	parent.addTabs(s_name + "详细信息",menu_href);
 }
 
 </script>

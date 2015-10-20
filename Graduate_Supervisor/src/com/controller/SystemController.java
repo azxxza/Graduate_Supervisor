@@ -8,6 +8,9 @@ package com.controller;
  */
 public class SystemController extends BaseController {
 
+	/*
+	 * 首页面
+	 */
 	public void index() {
 		if (getSessionAttr(LOGINUSER) == null)
 			redirect("/login/login");
@@ -16,6 +19,7 @@ public class SystemController extends BaseController {
 	}
 
 	public void welcome() {
+		
 		render("welcome.jsp");
 	}
 

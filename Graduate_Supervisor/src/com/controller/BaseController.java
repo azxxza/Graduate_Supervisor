@@ -15,16 +15,20 @@ public class BaseController extends Controller {
 	public static final String LOGINUSER = "loginUser";
 
 	/**
-	 * 用户角色
+	 * 登录用户
 	 * 
 	 * @return
 	 */
-
 	protected SysUser getLoginUser() {
 
 		return getSessionAttr(LOGINUSER);
 	}
 
+	/**
+	 * 登录角色
+	 * 
+	 * @return
+	 */
 	protected Integer getUserRole() {
 		int role = 0;
 
@@ -39,6 +43,11 @@ public class BaseController extends Controller {
 		return role;
 	}
 
+	/**
+	 * 登录用户的主键
+	 * 
+	 * @return
+	 */
 	protected String getId() {
 
 		SysUser user = getLoginUser();

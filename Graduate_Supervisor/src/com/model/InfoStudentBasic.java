@@ -24,6 +24,12 @@ public class InfoStudentBasic extends Model<InfoStudentBasic> {
 
 	}
 
+	public static List<InfoStudentBasic> getStudentBasiclist() {
+		String sql = "select * from " + INFO_STUDENT_BASIC;
+
+		return dao.find(sql);
+	}
+
 	public static QueryResultBean<InfoStudentBasic> getStudentResult(int page,
 			int rows) {
 

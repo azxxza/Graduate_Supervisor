@@ -11,12 +11,11 @@ import com.jfinal.core.JFinal;
 import com.jfinal.upload.UploadFile;
 import com.model.InfoTeacherBasic;
 import com.model.SysOpenTime;
-import com.model.VolunteerTime;
+import com.model.SysVolunteerTime;
 import com.service.DoVolunteerService;
 import com.service.TeacherBasicService;
 import com.service.VolunteerParamService;
 import com.util.ExcelExportUtil;
-import com.util.ExcelImportUtil;
 
 /**
  * 访问管理员
@@ -26,12 +25,101 @@ import com.util.ExcelImportUtil;
  */
 public class AdminController extends BaseController {
 
-	private DoVolunteerService volunteerService = new DoVolunteerService();
-
 	private VolunteerParamService volunteerParamService = new VolunteerParamService();
 
-	private TeacherBasicService teacherBasicService = new TeacherBasicService();
+	/*
+	 * 设置轮时间
+	 */
+	public void setOpenTime() {
 
+		render("set_open_time.jsp");
+
+	}
+
+	/*
+	 * 更新轮数列表的时间
+	 */
+	public void updateOpenTime() {
+
+		String para = getPara("para");
+
+		MessageBean messageBean = VolunteerParamService.updateOpenTime(para);
+
+		renderJson(messageBean);
+	}
+
+	/*
+	 * 保存新一轮
+	 */
+	public void saveOpenTime() {
+
+		MessageBean messageBean = new MessageBean();
+
+		SysOpenTime s_round_open_time = getModel(SysOpenTime.class,
+				"s_round_open_time");
+
+		boolean flag = volunteerParamService.saveOpenTime(s_round_open_time);
+
+		messageBean.setFlag(flag);
+
+		if (!flag) {
+			messageBean.setMessage("操作失败");
+		}
+
+		renderJson(messageBean);
+	}
+
+	/*
+	 * 轮时间列表
+	 */
+	public void getOpenTimeList() {
+
+		List<SysOpenTime> list = VolunteerParamService.getOpenTimeList();
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+
+		jsonMap.put("rows", list);
+
+		renderJson(jsonMap);
+	}
+
+	/*
+	 * 5个志愿时间
+	 */
+	public void setVolunteerTime() {
+
+		int r_t_round = getParaToInt("r_t_round");
+
+		setSessionAttr("r_t_round", r_t_round);
+
+		List<SysVolunteerTime> volunteerTimeList = SysVolunteerTime
+				.getVolunteerTimeByRound(r_t_round);
+
+		setSessionAttr("volunteerTimeList", volunteerTimeList);
+
+		render("set_volunteer_time.jsp");
+	}
+
+	/*
+	 * 5个志愿时间列表
+	 */
+	public void getVolunteerTimeList() {
+
+		int r_t_round = getSessionAttr("r_t_round");
+
+		List<SysVolunteerTime> list = VolunteerParamService
+				.getVolunteerTimeByRound(r_t_round);
+
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+
+		jsonMap.put("rows", list);
+
+		renderJson(jsonMap);
+	}
+
+	/*
+	 * 更新5个志愿的时间
+	 */
 	public void updateVolunteersTime() {
 
 		String para = getPara("para");
@@ -42,73 +130,9 @@ public class AdminController extends BaseController {
 		renderJson(messageBean);
 	}
 
-	public void updateOpenTime() {
-
-		String para = getPara("para");
-
-		MessageBean messageBean = volunteerParamService.updateOpenTime(para);
-
-		renderJson(messageBean);
-	}
-
-	public void setOpenTime() {
-
-		render("set_open_time.jsp");
-
-	}
-
-	public void getOpenTimeList() {
-
-		List<SysOpenTime> list = SysOpenTime.getOpenTimeList();
-
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-
-		jsonMap.put("rows", list);
-
-		renderJson(jsonMap);
-	}
-
-	public void uploadBasicExcel() {
-
-		ServletContext context = JFinal.me().getServletContext();
-
-		String realpath = context.getRealPath("/excel/");
-
-		UploadFile uploadFile = getFile("excelBasic", realpath,
-				200 * 1024 * 1024, "UTF-8");
-
-		ExcelImportUtil importUtil = new ExcelImportUtil();
-
-		String path = realpath + "/" + uploadFile.getFileName();
-
-		importUtil.importBasic(path);
-
-		uploadFile.getFile().delete();
-
-		render("studentManage.jsp");
-
-	}
-
-	public void uploadScoreExcel() {
-
-		ServletContext context = JFinal.me().getServletContext();
-
-		String realpath = context.getRealPath("/excel/");
-
-		UploadFile uploadFile = getFile("excelScore", realpath,
-				200 * 1024 * 1024, "UTF-8");
-
-		ExcelImportUtil importUtil = new ExcelImportUtil();
-
-		String path = realpath + "/" + uploadFile.getFileName();
-
-		importUtil.importScoreExcel(path);
-
-		uploadFile.getFile().delete();
-
-		render("studentManage.jsp");
-	}
-
+	/*
+	 * 导出双选结果报表
+	 */
 	public void exportAll() {
 
 		List<InfoTeacherBasic> list = InfoTeacherBasic.getTeacherBaseList();
@@ -119,50 +143,9 @@ public class AdminController extends BaseController {
 		renderNull();
 	}
 
-	public void saveOpenTime() {
-
-		MessageBean messageBean = new MessageBean();
-
-		SysOpenTime s_round_open_time = getModel(SysOpenTime.class,
-				"s_round_open_time");
-
-		boolean flag = volunteerParamService.saveOpenTime(s_round_open_time);
-
-		if (!flag) {
-			messageBean.setMessage("操作失败");
-		}
-
-		renderJson(messageBean);
-	}
-
-	public void setVolunteerTime() {
-
-		int r_t_round = getParaToInt("r_t_round");
-
-		setSessionAttr("r_t_round", r_t_round);
-
-		List<VolunteerTime> volunteerTimeList = VolunteerTime
-				.getVolunteerTimeByRound(r_t_round);
-
-		setSessionAttr("volunteerTimeList", volunteerTimeList);
-
-		render("set_volunteer_time.jsp");
-	}
-
-	public void getVolunteerTimeList() {
-
-		String r_t_round = getSessionAttr("r_t_round");
-
-		List<VolunteerTime> list = VolunteerTime
-				.getVolunteerTimeByRound(Integer.parseInt(r_t_round));
-
-		Map<String, Object> jsonMap = new HashMap<String, Object>();
-
-		jsonMap.put("rows", list);
-
-		renderJson(jsonMap);
-	}
-
+	/*
+	 * 设置上传的教职工号
+	 */
 	public void setUploadWorkId() {
 
 		String t_work_id = getPara("t_work_id");
@@ -177,6 +160,9 @@ public class AdminController extends BaseController {
 
 	}
 
+	/*
+	 * 上传pdf 文档
+	 */
 	public void uploadPDF() {
 
 		String t_work_id = getSessionAttr("f_t_work_id");
@@ -190,7 +176,7 @@ public class AdminController extends BaseController {
 		UploadFile uploadFile = getFile("pdf", realpath, 200 * 1024 * 1024,
 				"UTF-8");
 
-		boolean flag = teacherBasicService.uploadPDF(t_work_id,
+		boolean flag = TeacherBasicService.uploadPDF(t_work_id,
 				uploadFile.getFileName());
 
 		messageBean.setFlag(flag);
@@ -203,15 +189,21 @@ public class AdminController extends BaseController {
 
 	}
 
+	/*
+	 * 管理员强制分配学生
+	 */
 	public void doAdminVolunteer() {
 
 		String para = getPara("para");
 
-		MessageBean messageBean = volunteerService.doAdminVolunteer(para);
+		MessageBean messageBean = DoVolunteerService.doAdminVolunteer(para);
 
 		renderJson(messageBean);
 	}
 
+	/*
+	 * 保存教师
+	 */
 	public void saveTeacher() {
 		MessageBean messageBean = new MessageBean();
 		InfoTeacherBasic infoTeacherBasic = getModel(InfoTeacherBasic.class,
@@ -226,11 +218,14 @@ public class AdminController extends BaseController {
 		renderJson(messageBean);
 	}
 
+	/*
+	 * 删除一轮
+	 */
 	public void deleteOpenTime() {
 
 		int id = getParaToInt("id");
 
-		boolean flag = volunteerParamService.deleteOpenTime(id);
+		boolean flag = VolunteerParamService.deleteOpenTime(id);
 
 		MessageBean messageBean = new MessageBean();
 

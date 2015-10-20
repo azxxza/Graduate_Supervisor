@@ -1,11 +1,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="/privilege" prefix="privilege"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <title>后台管理系统</title>
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/css/welcome.css">
 <link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
 <script type="text/javascript" src="${ctx}/js/date.js"></script>
@@ -61,22 +61,35 @@ function getCNDate() {
     
     <div data-options="region:'east',split:true" style="width:300px;">
     	 <div class="easyui-layout" data-options="fit:true">   
-            <div data-options="region:'north',iconCls:'icon-tip',title:'数据统计'" style="height:160px">
+            <div data-options="region:'north',iconCls:'icon-tip',title:'登录信息'" style="height:300px">
             	<div style="height: 7%;"></div>
     			 
 	            	 <ul>
-					    <li style="height: 30px;color: #d39c1f;">登录次数：${loginCount}</li>
+					    <li style="height: 30px;color: #d39c1f;">登录账号：${loginUser.s_user_name}</li>
+					    <li style="height: 30px;color: #d39c1f;">登录次数：${loginUser.loginCount}</li>
+					    <li style="height: 30px;color: #d39c1f;">登录时间：${loginUser.loginTime}</li>
 	    			</ul> 
     			
     			    
             </div>   
-            <div data-options="region:'center',iconCls:'icon-tip',title:'校内链接'">
+            <div data-options="region:'center',iconCls:'icon-tip',title:'通知公告'">
+            	<div style="height: 7%;"></div>
+            	<privilege:show powerName="menu_teacher">
             	 <ul>
-				    <li style="height: 25px;"><a href="//www.fafu.edu.cn" style="text-decoration: none;font-size: 13px;" target="_blank">农大官网</a></li>
-				    <li style="height: 25px;"><a href="//xsgl.fafu.edu.cn" style="text-decoration: none;font-size: 13px;" target="_blank">金桥网</a></li>
-    				<li style="height: 25px;"><a href="//jwgl.fafu.edu.cn" style="text-decoration: none;font-size: 13px;" target="_blank">教务管理系统</a></li>
-    				<li style="height: 25px;"><a href="//xxxy.fafu.edu.cn" style="text-decoration: none;font-size: 13px;" target="_blank">计算机与信息学院</a></li>
+				   <li style="height: 30px;color: #d39c1f;">学生名额总数：${loginUser.t_number}</li>
+				   <li style="height: 30px;color: #d39c1f;">已经录取名额：${loginUser.selected_number}</li>
+				    
     			</ul> 
+    			</privilege:show>
+            	<privilege:show powerName="menu_admin">
+            		<span style="padding-left: 30px; color: red;">暂无相关信息</span>
+    			</privilege:show>
+            	<privilege:show powerName="menu_student">
+            	 <ul>
+				   <span style="padding-left: 30px; color: red;">暂无相关信息</span>
+				    
+    			</ul> 
+    			</privilege:show>
             </div>   
         </div> 
     	

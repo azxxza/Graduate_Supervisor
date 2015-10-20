@@ -62,9 +62,11 @@ function initBasicGrid() {
 		 		
 			 }
 	 	 },
+	 	 {field : 'v_t_start_time_copy',hidden:true},
 	 	 {field : 'v_t_start_time',title : '开始时间(点击单元格修改时间)',width : getWidth(0.36),align : 'center',
 	 	 	editor:{ type:'datetimebox',options:{editable:false}}
 	 	 },
+	 	 {field : 'v_t_end_time_copy',hidden:true},
 	 	 {field : 'v_t_end_time',title : '结束时间(点击单元格修改时间)',width : getWidth(0.36),align : 'center',
 	 		 editor:{ type:'datetimebox',options:{editable:false}}
 	 	 }
@@ -73,11 +75,6 @@ function initBasicGrid() {
 
 		onLoadError : function() {
 			$.messager.alert('提示信息','数据加载失败','error');
-		},
-		
-		onLoadSuccess : function(data) {
-			$(this).datagrid('doCellTip',{});
-
 		}
 	});
 	
@@ -115,27 +112,38 @@ function submitData() {
 	for(var i = 0;i<rows.length;i++){
 		var id =  rows[i].id;
 		var v_t_start_time = rows[i].v_t_start_time;
+		var v_t_start_time_copy = rows[i].v_t_start_time_copy;
 		var v_t_end_time = rows[i].v_t_end_time;
+		var v_t_end_time_copy = rows[i].v_t_end_time_copy;
 		
-		if (v_t_start_time != undefined && v_t_end_time != undefined){
-			if(v_t_start_time >= v_t_end_time){
-				var count = i + 1;
-				$.messager.alert('提示信息','第'+count+'志愿开始时间不能大于结束时间','warning');
-				return;
-			}
-			
-			if(i != 0){
-				var last_end_time = rows[i-1].v_t_end_time;
-				if(last_end_time > v_t_start_time){
-					var count = i+1;
-					$.messager.alert('提示信息','第'+count+'志愿开始时间不能小于'+i+'志愿结束时间','warning');
+		if(v_t_start_time != v_t_start_time_copy || v_t_end_time != v_t_end_time_copy){
+			if (v_t_start_time != undefined && v_t_end_time != undefined){
+				if(v_t_start_time >= v_t_end_time){
+					var count = i + 1;
+					$.messager.alert('提示信息','第'+count+'志愿开始时间不能大于结束时间','warning');
 					return;
 				}
+				
+				if(i != 0){
+					var last_end_time = rows[i-1].v_t_end_time;
+					if(last_end_time > v_t_start_time){
+						var count = i+1;
+						$.messager.alert('提示信息','第'+count+'志愿开始时间不能小于'+i+'志愿结束时间','warning');
+						return;
+					}
+				}
+				var par =  id + "," + v_t_start_time + "," + v_t_end_time;
+				array.push(par);
 			}
-			var par =  id + "," + v_t_start_time + "," + v_t_end_time;
-			array.push(par);
 		}
 		
+		
+		
+	}
+	
+	if(array.length == 0){
+		$.messager.alert('提示信息','没有可以提交的数据','warning');
+		return;
 	}
 	
 	para = array.join(";");

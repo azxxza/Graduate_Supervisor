@@ -9,7 +9,7 @@ public class StudentBasicService {
 	/*
 	 * 成绩学年学期列表
 	 */
-	public List<SysYearTerm> getSysYearTermList(String s_id) {
+	public static List<SysYearTerm> getSysYearTermList(String s_id) {
 
 		List<SysYearTerm> list = SysYearTerm.getYearTermList();
 
@@ -24,7 +24,7 @@ public class StudentBasicService {
 	/*
 	 * 删除学生
 	 */
-	public boolean deleteStudent(String s_id) {
+	public static boolean deleteStudent(String s_id) {
 
 		InfoStudentBasic infoStudentBasic = InfoStudentBasic.getStudent(s_id);
 

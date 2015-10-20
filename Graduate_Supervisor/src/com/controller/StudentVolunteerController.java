@@ -9,8 +9,6 @@ import com.service.DoVolunteerService;
 
 public class StudentVolunteerController extends BaseController {
 
-	private DoVolunteerService volunteerService = new DoVolunteerService();
-
 	/*
 	 * 提交志愿
 	 */
@@ -20,7 +18,7 @@ public class StudentVolunteerController extends BaseController {
 
 		String s_id = getId();
 
-		MessageBean messageBean = volunteerService.doStudentVolunteer(para,
+		MessageBean messageBean = DoVolunteerService.doStudentVolunteer(para,
 				s_id);
 
 		renderJson(messageBean);
@@ -53,15 +51,18 @@ public class StudentVolunteerController extends BaseController {
 
 		String total_id = getPara("total_id");
 
-		MessageBean messageBean = volunteerService.doTeacherVolunteer(total_id,
-				getId());
+		MessageBean messageBean = DoVolunteerService.doTeacherVolunteer(
+				total_id, getId());
 
 		renderJson(messageBean);
 	}
 
+	/*
+	 * 志愿下拉数据
+	 */
 	public void getVolunteerJson() {
 
-		List<ItemBean> treeList = volunteerService.getVolunteerJson(getId());
+		List<ItemBean> treeList = DoVolunteerService.getVolunteerJson(getId());
 
 		renderJson(treeList);
 

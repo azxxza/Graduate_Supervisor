@@ -1,7 +1,6 @@
 package com.system;
 
-import com.common.TableCommom;
-import com.model.VolunteerTime;
+import com.model.SysVolunteerTime;
 
 /**
  * 系统志愿执行模型
@@ -17,19 +16,19 @@ public class CurrentExcuteVolunteer {
 	// 系统单例
 	private static CurrentExcuteVolunteer currentExcuteVolunteer;
 
-	private VolunteerTime volunteerTime;
+	private SysVolunteerTime volunteerTime;
 
 	/**
 	 * 系统如果开放，开放时间
 	 * 
 	 * @return
 	 */
-	public VolunteerTime getVolunteerTime() {
+	public SysVolunteerTime getVolunteerTime() {
 
 		return volunteerTime;
 	}
 
-	public void setVolunteerTime(VolunteerTime volunteerTime) {
+	public void setVolunteerTime(SysVolunteerTime volunteerTime) {
 		this.volunteerTime = volunteerTime;
 	}
 
@@ -55,6 +54,10 @@ public class CurrentExcuteVolunteer {
 	public boolean isRunning() {
 
 		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 }

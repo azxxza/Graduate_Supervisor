@@ -3,13 +3,10 @@
 <html>
 <head>
 <title>基本信息列表</title>
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/easyui_1.4.3/themes/icon.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/locale/easyui-lang-zh_CN.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/easyui_1.4.3/easyui_extension.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/ShowPDF/Scripts/pdfobject.js"></script>
+<%@ include file="/jsp/common/meta.jsp"%>
+<%@ include file="/jsp/common/taglibs.jsp"%>
+<script type="text/javascript" src="${ctx}/easyui_1.4.3/jquery.min.js"></script>
+<script type="text/javascript" src="${ctx}/ShowPDF/Scripts/pdfobject.js"></script>
 <script type="text/javascript">
   	var filename = "";   
 	/**
@@ -20,7 +17,7 @@
 	
 	if(filename != undefined && filename != ''){
 		var success = new PDFObject({
-	        url: "${pageContext.request.contextPath}/pdf/" + filename,
+	        url: "${ctx}/pdf/" + filename,
 	        
 	        pdfOpenParams: {
 	            scrollbars: '0',

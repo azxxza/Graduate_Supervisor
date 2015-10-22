@@ -35,15 +35,17 @@ function initBasicGrid() {
 		 columns : [ [
 		 {field : 's_t_id',hidden:true},
 		 {field : 't_work_id',hidden:true},
-	 	 {field : 's_id',title : '学号',width : getWidth(0.25),align : 'center'},
-	 	 {field : 's_name',title : '姓名',width : getWidth(0.25),align : 'center'},
-	 	 {field : 's_sex',title : '性别',width : getWidth(0.2),align : 'center'},
-	 	 {field:  'detail',title:'详细信息',width:getWidth(0.25),align:'center',
+	 	 {field : 's_id',title : '学号',width : getWidth(0.19),align : 'center'},
+	 	 {field : 's_name',title : '姓名',width : getWidth(0.19),align : 'center'},
+	 	 {field : 's_sex',title : '性别',width : getWidth(0.19),align : 'center'},
+	 	 {field:  'detail',title:'详细信息',width:getWidth(0.19),align:'center',
        		 formatter: function(value,row,index){
 				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='studentScore("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
+		 
+		{field : 's_t_remark',title : '指导方向',width : getWidth(0.2),align : 'center'},
 		] ],
 		
 		onLoadSuccess : function(data) {

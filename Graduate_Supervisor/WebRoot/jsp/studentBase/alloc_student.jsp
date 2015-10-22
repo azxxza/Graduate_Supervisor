@@ -176,6 +176,7 @@ function sumbitData(){
 	if(array.length == 0){
 		
 		$.messager.alert('提示信息', '没有可提交的志愿','warning');
+		
 		return;
 	}
 	

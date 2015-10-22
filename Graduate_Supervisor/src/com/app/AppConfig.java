@@ -1,12 +1,23 @@
 package com.app;
 
-import com.controller.AdminController;
-import com.controller.LoginController;
-import com.controller.StudentBaseController;
-import com.controller.StudentVolunteerController;
-import com.controller.SystemController;
-import com.controller.TeacherBaseController;
-import com.controller.UserController;
+import com.app.controller.AdminController;
+import com.app.controller.LoginController;
+import com.app.controller.StudentBaseController;
+import com.app.controller.StudentVolunteerController;
+import com.app.controller.SystemController;
+import com.app.controller.TeacherBaseController;
+import com.app.controller.UserController;
+import com.app.model.InfoStudentBasic;
+import com.app.model.InfoStudentScore;
+import com.app.model.InfoTeacherBasic;
+import com.app.model.LogicDoVolunteer;
+import com.app.model.LogicVolunteerResult;
+import com.app.model.SysStudentRoundTime;
+import com.app.model.SysTeacherRoundTime;
+import com.app.model.SysUser;
+import com.app.model.SysUserLog;
+import com.app.model.SysVolunteerTime;
+import com.app.model.SysYearTerm;
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -18,17 +29,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.render.ViewType;
-import com.model.InfoStudentBasic;
-import com.model.InfoStudentScore;
-import com.model.InfoTeacherBasic;
-import com.model.LogicDoVolunteer;
-import com.model.LogicVolunteerResult;
-import com.model.SysOpenTime;
-import com.model.SysUser;
-import com.model.SysUserLog;
-import com.model.SysVolunteerTime;
-import com.model.SysYearTerm;
-import com.system.QuartzService;
+import com.pluins.quarz.AppQuarzPlugin;
 
 public class AppConfig extends JFinalConfig {
 
@@ -61,6 +62,7 @@ public class AppConfig extends JFinalConfig {
 	}
 
 	public void configPlugin(Plugins me) {
+		
 		C3p0Plugin c3p0Plugin = new C3p0Plugin(PropKit.get("jdbcUrl"),
 				PropKit.get("user"), PropKit.get("password").trim());
 		me.add(c3p0Plugin);
@@ -82,17 +84,22 @@ public class AppConfig extends JFinalConfig {
 
 		arp.addMapping("sys_user", "id", SysUser.class);
 
-		arp.addMapping("sys_round_open_time", "id", SysOpenTime.class);
+		arp.addMapping("sys_teacher_round_time", "id",
+				SysTeacherRoundTime.class);
 
-		arp.addMapping("sys_volunteer_open_time", "id", SysVolunteerTime.class);
+		arp.addMapping("sys_student_round_time", "id",
+				SysStudentRoundTime.class);
+
+		arp.addMapping("sys_volunteer_time", "id", SysVolunteerTime.class);
 
 		arp.addMapping("sys_year_term", "id", SysYearTerm.class);
 
 		arp.addMapping("sys_user_log", "id", SysUserLog.class);
 
-		QuartzService plugin = new QuartzService();
+		AppQuarzPlugin quartzPlugin = new AppQuarzPlugin();
 
-		me.add(plugin);
+		me.add(quartzPlugin);
+
 	}
 
 	public static void main(String[] args) {

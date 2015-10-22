@@ -66,21 +66,18 @@ function initBasicGrid() {
 
 		 columns : [ [
 		 {field : 't_work_id',hidden:true},
-	 	 {field : 't_name',title : '姓名',width : getWidth(0.1),align : 'center'},
-		 {field : 't_sex',title : '性别',width : getWidth(0.09),align : 'center'},
-		 {field : 't_occupation',title : '职称/职务',width : getWidth(0.1),align : 'center'},
-		 {field : 't_hightest_background',title : '最高学历',width : getWidth(0.1),align : 'center'},
-		 {field : 't_gradute_school',title : '毕业院校',width : getWidth(0.1),align : 'center'},
-		 {field : 't_tel',title : '联系电话',width : getWidth(0.1),align : 'center'},
-		 {field : 't_email',title : 'Email',width : getWidth(0.1),align : 'center'},
-		 {field:  'detail',title:'详细信息',width:getWidth(0.1),align:'center',
+	 	 {field : 't_name',title : '姓名',width : getWidth(0.15),align : 'center'},
+		 {field : 't_sex',title : '性别',width : getWidth(0.15),align : 'center'},
+		 {field : 't_birthday',title : '出生年月',width : getWidth(0.15),align : 'center'},
+		 {field : 't_degree',title : '学历',width : getWidth(0.15),align : 'center'},
+		 {field:  'detail',title:'详细信息',width:getWidth(0.15),align:'center',
        		 formatter: function(value,row,index){
 				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='teacherDetail("+index+")'>更多</a>";  
 				 return detail; 
        		 } 
 		 },
 		 
-		 {field : 't_number',title : '名额(单击单元格可分配名额)',width : getWidth(0.17),align : 'center',editor:{type:'numberbox'}},
+		 {field : 't_number',title : '名额(单击单元格可分配名额)',width : getWidth(0.2),align : 'center',editor:{type:'numberbox'}},
 		 {field : 't_number_copy',hidden:true},
 
 		] ],

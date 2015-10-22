@@ -24,6 +24,10 @@
 
 			<taglib-location>/WEB-INF/privilege.tld</taglib-location>
 
+			<taglib-uri>/open</taglib-uri>
+
+			<taglib-location>/WEB-INF/open.tld</taglib-location>
+
 		</taglib>
 
 	</jsp-config>

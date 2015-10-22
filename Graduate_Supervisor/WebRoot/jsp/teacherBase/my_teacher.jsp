@@ -5,8 +5,13 @@
 <title>基本信息列表</title>
 <%@ include file="/jsp/common/meta.jsp"%>
 <%@ include file="/jsp/common/taglibs.jsp"%>
-<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="${ctx}/easyui_1.4.3/themes/metro-blue/easyui.css">
 <%@ include file="/jsp/common/easyui.jsp"%>
+<style type="text/css">
+	.datagrid-cell-rownumber{
+		height: 26px;
+	}
+</style>
 <script language="javascript">
 
 /*
@@ -21,25 +26,24 @@ function initBasicGrid() {
 		singleSelect : true,
 		loadMsg : '正在加载数据',
 		emptyMsg : '没有相关记录',
-		url : '${pageContext.request.contextPath}/teacherBase/getMyTeacherList?Date='
+		rownumbers:true,
+		url : '${ctx}/teacherBase/getMyTeacherList?Date='
 				+ new Date() + '',
 		 columns : [ [
 		 {field : 't_work_id',hidden:true},
-	 	 {field : 't_name',title : '姓名',width : getWidth(0.11),align : 'center'},
-		 {field : 't_sex',title : '性别',width : getWidth(0.11),align : 'center'},
-		 {field : 't_occupation',title : '职称/职务',width : getWidth(0.11),align : 'center'},
-		 {field : 't_hightest_background',title : '最高学历',width : getWidth(0.11),align : 'center'},
-		 {field : 't_gradute_school',title : '毕业院校',width : getWidth(0.11),align : 'center'},
-		 {field : 't_tel',title : '联系电话',width : getWidth(0.11),align : 'center'},
-		 {field : 't_email',title : 'Email',width : getWidth(0.11),align : 'center'},
-		 {field:  'detail',title:'详细信息',width:getWidth(0.11),align:'center',
+	 	 {field : 't_name',title : '姓名',width : getWidth(0.14),align : 'center'},
+		 {field : 't_sex',title : '性别',width : getWidth(0.12),align : 'center'},
+		 {field : 't_birthday',title : '出生年月',width : getWidth(0.14),align : 'center'},
+		 {field : 't_degree',title : '学历',width : getWidth(0.14),align : 'center'},
+		 {field : 's_t_remark',title : '指导方向',width : getWidth(0.14),align : 'center'},
+		 {field:  'detail',title:'详细信息',width:getWidth(0.14),align:'center',
        		 formatter: function(value,row,index){
 				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none'  onclick='teacherDetail("+index+")'></a>";  
 				 return detail; 
        		 } 
 		 },
 		 
-		 {field : 's_t_status',title : '状态',width : getWidth(0.11),align : 'center',
+		 {field : 's_t_status',title : '状态',width : getWidth(0.14),align : 'center',
 		 	 formatter: function(value,row,index){
 				 var detail = "<a href='#' style='color:red' class='delcls'></a>";  
 				 return detail;  

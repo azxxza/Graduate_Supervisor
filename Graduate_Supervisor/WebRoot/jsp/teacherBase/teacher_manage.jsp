@@ -110,6 +110,8 @@ jQuery(function() {
 
 	initBasicGrid();
 	
+	parent.$("#main").tabs("loaded");
+	
 });
 
 function comfirmDel(index){
@@ -193,6 +195,37 @@ function check(){
 	return true;
 }
 
+function checkExcel(filepath){
+		//为了避免转义反斜杠出问题，这里将对其进行转换
+	var re = /(\\+)/g;
+	var filename = filepath.replace(re, "#");
+	//对路径字符串进行剪切截取
+	var one = filename.split("#");
+	//获取数组中最后一个，即文件名
+	var two = one[one.length - 1];
+	//再对文件名进行截取，以取得后缀名
+	var three = two.split(".");
+	//获取截取的最后一个字符串，即为后缀名
+	var last = three[three.length - 1];
+	//添加需要判断的后缀名类型
+	var tp = "xls,xlsx";
+	//返回符合条件的后缀名在字符串中的位置
+	var rs = tp.indexOf(last);
+	
+	//如果返回的结果大于或等于0，说明包含允许上传的文件类型
+	if (filepath == "" || filepath.length < 3) {
+		$.messager.alert('提示信息', '请选择有效文件！', 'warning');
+		return false;
+	}
+
+	if (rs < 0) {
+		$.messager.alert('提示信息', '您选择的上传文件不是有效的excel文件！', 'warning');
+		return false;
+	}
+
+	
+	return true;
+}
 
 function uploadPDF(){
 
@@ -201,7 +234,7 @@ function uploadPDF(){
 	if(succ){
 		var t_work_id = document.getElementById("f_t_work_id").value;
 		
-		var saveURL = "${ctx}/admin/setUploadWorkId?t_work_id="+t_work_id+"&date="
+		var saveURL = "${ctx}/teacherBase/setUploadWorkId?t_work_id="+t_work_id+"&date="
 					+ new Date() + "";
 		
 		jQuery.post(saveURL,function(jsonData) {
@@ -271,7 +304,26 @@ function submitTeacherData(){
 	
 }
 
-function saveTeacher(){
+function openUploadWin(){
+	$('#teacherWin').dialog('open');
+}
+
+function importTeacher(){
+
+	//获取欲上传的文件路径
+	var filepath = $('#excelTeacher').filebox('getValue');
+	
+	var flag = checkExcel(filepath);
+	if(flag){
+	
+		document.getElementById("uploadTeacherForm").submit();
+		
+		parent.$("#main").tabs("loading","正在导入中");
+		
+	}
+}
+
+function openAddWin(){
 	
 }
 
@@ -281,8 +333,8 @@ function saveTeacher(){
 
 	<div id="toobar"  style="padding-right: 5%;">
 		
-		<a href="#" class="easyui-linkbutton" iconCls="icon-export" plain="true" onclick="importTeacher();">导入教师信息</a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="saveTeacher();">添加教师信息</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-export" plain="true" onclick="openUploadWin();">导入教师信息</a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin();">添加教师信息</a>
 		
 	</div>
 	
@@ -290,6 +342,22 @@ function saveTeacher(){
 		
 		<div id="basicGrid_div"></div>
 	</div>
+	
+	<div id="teacherWin" class="easyui-dialog" title="导入教师基本信息" style="width:400px;height:300px; text-align: center;"   
+        data-options="iconCls:'icon-tip',resizable:true,modal:true,closed:true">
+        
+        <div style="height: 30%;"></div>
+        
+       <form id="uploadTeacherForm"
+			action="${ctx}/teacherBase/uploadTeacherExcel"
+			name="uploadTeacherForm" method="post" enctype="multipart/form-data">
+        	 <input  id="excelTeacher" name="excelTeacher" class="easyui-filebox" data-options="buttonText:'选择excel文件'"><br><br>
+        	 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-upload" plain="false" onclick="importTeacher();">确定</a>&nbsp;&nbsp;
+        	 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" plain="false" onclick="cancelUpload();">取消</a>
+       		
+     	</form>
+     	
+	</div> 
 
 	<div id="win" class="easyui-dialog" title="文档上传" style="width:400px;height:300px; text-align: center;"   
         data-options="iconCls:'icon-tip',resizable:true,modal:true,closed:true">
@@ -297,7 +365,7 @@ function saveTeacher(){
         <div style="height: 30%;"></div>
         
        <form id="uploadForm"
-			action="${ctx}/admin/uploadPDF"
+			action="${ctx}/teacherBase/uploadPDF"
 			name="uploadForm" method="post" enctype="multipart/form-data">
 			<input type="hidden" name="t_work_id" id="f_t_work_id">
         	 <input  id="pdf" name="pdf" class="easyui-filebox" data-options="buttonText:'选择pdf文件'"><br><br>

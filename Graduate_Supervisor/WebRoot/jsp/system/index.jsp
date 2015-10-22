@@ -179,7 +179,8 @@
 								教师名额分配
 							</span>
 						</li>
-						<li data-options="iconCls:'icon-time',url:'${ctx}/admin/setOpenTime'"><span>开放时间</span></li>
+						<li data-options="iconCls:'icon-time',url:'${ctx}/admin/setStudentTime'"><span>学生开放时间</span></li>
+						<li data-options="iconCls:'icon-time',url:'${ctx}/admin/setTeacherTime'"><span>教师开放时间</span></li>
 					</ul>
 				</div>
 			

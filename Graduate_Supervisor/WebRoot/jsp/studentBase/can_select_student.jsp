@@ -44,21 +44,22 @@ function initBasicGrid() {
 
 		 columns : [ [
 		 {field : 'id',checkbox:true},
-	 	 {field : 's_id',title : '学号',width : getWidth(0.2),align : 'center'},
-	 	 {field : 's_name',title : '姓名',width : getWidth(0.18),align : 'center'},
+	 	 {field : 's_id',title : '学号',width : getWidth(0.15),align : 'center'},
+	 	 {field : 's_name',title : '姓名',width : getWidth(0.15),align : 'center'},
 	 	 {field : 's_sex',title : '性别',width : getWidth(0.15),align : 'center'},
-	 	  {field:  'detail',title:'详细信息',width:getWidth(0.2),align:'center',
+	 	  {field:  'detail',title:'详细信息',width:getWidth(0.15),align:'center',
        		 formatter: function(value,row,index){
 				 var detail = "<a href='#' class='detailcls' style='color:blue;text-decoration:none' onclick='studentScore("+index+")'>智育成绩</a>";  
 				 return detail; 
        		 } 
 		 },
-		 
-	 	 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.2),align:'center',
+	 	 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.15),align:'center',
 	 	 	formatter: function(value,row,index){
 				return '第 '+ value + ' 志愿';
        		 } 
-       	}
+       	},
+       	
+       	{field : 's_t_remark',title : '指导方向',width : getWidth(0.19),align : 'center'},
 		] ],
 
 		onLoadError : function() {

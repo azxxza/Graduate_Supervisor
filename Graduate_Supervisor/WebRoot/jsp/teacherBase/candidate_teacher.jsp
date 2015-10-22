@@ -15,49 +15,19 @@
 </style>
 <script language="javascript">
 
-
-var editIndex = undefined;
-function endEditing(){
-	if (editIndex == undefined){return true}
-	if ($('#basicGrid_div').datagrid('validateRow', editIndex)){
-		$('#basicGrid_div').datagrid('endEdit', editIndex);
-		editIndex = undefined;
-		return true;
-	} else {
-		return false;
-	}
-}
-function onClickCell(index, field){
-
-	$('#basicGrid_div').datagrid('selectRow', index);// 关键在这里
-	var row = $('#basicGrid_div').datagrid('getSelected');
-	var rest_number = row.rest_number;
-	var s_t_volunteer = row.s_t_volunteer;
-	if(rest_number == 0 || (field == 's_t_volunteer' && s_t_volunteer != undefined)){
-		return;
-	}else {
-		if(s_t_volunteer == undefined){
-			if (endEditing()){
-				$('#basicGrid_div').datagrid('selectRow', index)
-						.datagrid('editCell', {index:index,field:field});
-				editIndex = index;
-				return;
-			}
-		}
+//渲染按钮
+function renderButton(){
 	
-	
-	}
-
 	$('.detailcls').linkbutton({text : '更多',plain : true,iconCls : 'icon-search'});
 	$('.delcls').linkbutton({text : '删除志愿',plain : true,iconCls : 'icon-trash'});
 	$('.addcls').linkbutton({text : '添加志愿',plain : true,iconCls : 'icon-add'});
-	
 }
+
 	
 /*
  * 表格初始化
  */
-function initBasicGrid(isOpen) {
+function initBasicGrid() {
 	
 	jQuery('#basicGrid_div').datagrid({
 		view : myview,
@@ -69,18 +39,14 @@ function initBasicGrid(isOpen) {
 		pagination : true,
 		emptyMsg : '没有相关记录',
 		striped:true,
-		onClickCell: onClickCell,
 		url : '${ctx}/teacherBase/getTeacherBaseList?Date='
 				+ new Date() + '',
 		 columns : [ [
 		 {field : 't_work_id',hidden:true},
-	 	 {field : 't_name',title : '姓名',width : getWidth(0.05),align : 'center'},
+	 	 {field : 't_name',title : '姓名',width : getWidth(0.08),align : 'center'},
 		 {field : 't_sex',title : '性别',width : getWidth(0.05),align : 'center'},
-		 {field : 't_occupation',title : '职称/职务',width : getWidth(0.08),align : 'center'},
-		 {field : 't_hightest_background',title : '最高学历',width : getWidth(0.08),align : 'center'},
-		 {field : 't_gradute_school',title : '毕业院校',width : getWidth(0.08),align : 'center'},
-		 {field : 't_tel',title : '联系电话',width : getWidth(0.08),align : 'center'},
-		 {field : 't_email',title : 'Email',width : getWidth(0.08),align : 'center'},
+		 {field : 't_birthday',title : '出生年月',width : getWidth(0.08),align : 'center'},
+		 {field : 't_degree',title : '学历',width : getWidth(0.08),align : 'center'},
 		 {field : 'rest_number',title : '名额剩余(个)',width : getWidth(0.08),align : 'center',
 		 	styler: function(value,row,index){
 		 		if(value ==  undefined || value == ''){
@@ -107,25 +73,26 @@ function initBasicGrid(isOpen) {
 		 },
 		 
 		 {field:  's_t_volunteer_copy',hidden:true},
-		 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.09),align:'center',
+		 {field:  's_t_volunteer',title:'第几志愿',width:getWidth(0.12),align:'center',
 			  editor : {  type : 'combobox',  options : { 
 			  	 id : 'combo', 
 			  	 editable : false,
 			  	 url : '${ctx}/studentVolunteer/getVolunteerJson',
           		 valueField : "value",/* value是unitJSON对象的属性名 */  
            		 textField : "text",/* name是unitJSON对象的属性名 */  
+           		 icons: [{
+						iconCls:'icon-clear',
+						handler: function(e){
+							$(e.data.target).textbox('setValue', '');
+						}
+					}]
            		 }
          	  },
          	  
          	   formatter: function(value,row,index){
          	   
-         	   		var del = "<a href='#' class='addcls' style='color:blue'></a>";	
-         	   		
-         	   		if(isOpen == false){
-         	   			return '';
-         	   		}
-         	   		
-					if(value != undefined){
+         	   		var del = "<a href='#' class='addcls' style='color:blue' onclick='add("+index+")'></a>";	
+					if(value != undefined && value != ''){
 			 			return '第 ' + value +  ' 志愿';
 			 		}else if(row.rest_number  <=  0){
 			 			return ''; 
@@ -143,9 +110,16 @@ function initBasicGrid(isOpen) {
 			},
           },
           
+          {field : 's_t_remark',title : '备注指导方向',width : getWidth(0.17),align : 'center',
+			 
+			  editor : {  type : 'textbox' },
+			
+		 },
+		 
+          
           
 		 
-		 {field:  'option',title:'操作',width:getWidth(0.08),align:'center',
+		 {field:  'option',title:'操作',width:getWidth(0.1),align:'center',
 		 	formatter : function(value, row, index) {
 		 		if(row.s_t_volunteer != '' && row.s_t_volunteer != undefined){
 		 			var add = "<a href='#' class='delcls'  onclick='comfirmDel("
@@ -163,13 +137,11 @@ function initBasicGrid(isOpen) {
 			  styler: function(value,row,index){
 		 		
 		 		 return 'color:green;';
-					
 			  }
 			
 		 },
 		 
 		 
-
 		] ],
 
 		onLoadSuccess : function(data) {
@@ -184,66 +156,14 @@ function initBasicGrid(isOpen) {
 			$.messager.alert('提示信息','数据加载失败','error');
 		},
 		
-// 		onBeforeEdit:function(index, row){
-		
-// 			before = row.s_t_volunteer;
-			
-// 		},
-		
-// 		 onAfterEdit:function(index, row, changes){
-		 
-// 		 	var s_t_volunteer = row.s_t_volunteer;
-		 	
-// 		 	if(s_t_volunteer != before){
-// 		 		var t_work_id = row.t_work_id;
-		 	
-// 		 	if(s_t_volunteer != undefined && s_t_volunteer != ""){
-		 	
-// 		 		var par = row.t_work_id + "," + row.s_t_volunteer;
-// 		 		for(var i = 0; i < array.length; i++){
-		 		
-// 		 			if(array[i].charAt(0) == t_work_id){
-// 		 				break;
-// 		 			}
-		 			
-// 		 		}
-		 		
-// 		 		array.push(par);
-		 
-// 		 		para = array.join(";");
-// 		 	}
-// 		 	}
-		 	
-		 	
-// 	    }
-		
 	});
 	
 
 }
 
-
-/*
- * 模态对话框初始化
- */
-function initWin(){
-	
-	$('#win').window({
-		width : 670,
-		height : 450,
-		modal : true,
-		title : "用户操作",
-		loadMsg : '正在加载数据',
-		closed : true,
-
-		onBeforeClose : function() {
-			jQuery('#basicGrid_div').datagrid("reload");
-		}
-
-	});
-
+function add(index){
+	$('#basicGrid_div').datagrid('beginEdit', index);// 关键在这里
 }
-
 
 
 /**
@@ -251,11 +171,10 @@ function initWin(){
  */
 jQuery(function() {
 
-	var isOpen = ${isOpen};
-
-	initBasicGrid(isOpen);
 	
-	initWin();
+
+	initBasicGrid();
+	
 	
 });
 
@@ -297,7 +216,8 @@ function save(){
 		var s_t_volunteer_copy = rows[i].s_t_volunteer_copy;
 		if (s_t_volunteer != undefined && s_t_volunteer != '' && s_t_volunteer != s_t_volunteer_copy){
 			var t_work_id = rows[i].t_work_id;
-			para = t_work_id + ',' + s_t_volunteer;
+			var s_t_remark = rows[i].s_t_remark;
+			para = t_work_id + ',' + s_t_volunteer + ',' + s_t_remark;
 			array.push(para);
 			count = count + 1;
 		}
@@ -306,6 +226,7 @@ function save(){
 	
 	if(count < 1){
 		$.messager.alert('提示信息','没有选择志愿','warning');
+		renderButton();
 		return;
 	}
 	
@@ -388,14 +309,14 @@ function undo(){
 </script>
 </head>
 <body class="easyui-layout">
-<!-- 	<c:if test="${isOpen == true}"> -->
-<open:show>
+
+	<open:show>
 		<div id="toobar"  style="padding-right: 5%;">
 			<a href="#" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="save();">提交志愿</a>
 			<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="undo();">撤销</a>
 		</div>
-</open:show>
-<!-- 	</c:if>	 -->
+	</open:show>
+
 	<div id="basic_div" data-options="region:'center',title:'教师基本信息列表'">
 		<div id="basicGrid_div"></div>
 	</div>
